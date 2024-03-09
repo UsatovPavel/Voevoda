@@ -27,6 +27,9 @@ void AHexGridManager::BeginPlay()
 			const float YPos = Y * TileVerticalOffset;
 
 			TSubclassOf<AHexTile> TileToSpawn = GrassHexTile;
+			if (FMath::RandRange(0.f, 1.f) <= ChanceOfWater) {
+				TileToSpawn = WaterHexTile;
+			}
 
 			AHexTile* NewTile = GetWorld()->SpawnActor<AHexTile>(TileToSpawn, FVector(FIntPoint(XPos, YPos)), FRotator::ZeroRotator);
 			NewTile->TileIndex = FIntPoint(X, Y);

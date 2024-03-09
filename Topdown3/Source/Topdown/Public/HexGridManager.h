@@ -26,8 +26,12 @@ protected:
 	float TileVerticalOffset;
 	UPROPERTY(EditAnywhere, Category = "HexGrid|Layout")
 	float OddRowHorizontalOffset;
+	UPROPERTY(EditAnywhere, Category = "HexGrid|Layout")
+	float ChanceOfWater;
 	UPROPERTY(EditAnywhere, Category = "HexGrid|Setup")
 	TSubclassOf<AHexTile> GrassHexTile;
+	UPROPERTY(EditAnywhere, Category = "HexGrid|Setup")
+	TSubclassOf<AHexTile> WaterHexTile;
 public:	
 	// Sets default values for this actor's properties
 	AHexGridManager();
