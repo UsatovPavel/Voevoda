@@ -7,12 +7,10 @@
 #include "MyProject1040GameModeBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class MYPROJECT1040_API AMyProject1040GameModeBase : public AGameModeBase
-{
-	GENERATED_BODY()
-	AMyProject1040GameModeBase();
-	
+class MYPROJECT1040_API AMyProject1040GameModeBase : public AGameModeBase {
+  GENERATED_BODY()
+  AMyProject1040GameModeBase();
 };

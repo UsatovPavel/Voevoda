@@ -7,26 +7,20 @@
 #include "MyCharacter.generated.h"
 
 UCLASS()
-class MYPROJECT1040_API AMyCharacter : public ACharacter
-{
-    GENERATED_BODY()
+class MYPROJECT1040_API AMyCharacter : public ACharacter {
+  GENERATED_BODY()
 
 public:
-  
-    AMyCharacter();
+  AMyCharacter();
 
-    
-    virtual void Tick(float DeltaTime) override;
+  virtual void Tick(float DeltaTime) override;
 
-    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+  virtual void SetupPlayerInputComponent(
+      class UInputComponent *PlayerInputComponent) override;
 
 protected:
-    
-    virtual void BeginPlay() override;
+  virtual void BeginPlay() override;
 
-    void MoveRightOrLeft(float Value);
-    void MoveForwardOrBack(float Value);
-
- 
+  void MoveRightOrLeft(float Value);
+  void MoveForwardOrBack(float Value);
 };
-
