@@ -6,14 +6,8 @@
 #include "PaperTileMapActor.h"
 #include "PaperTileMapComponent.h"
 
-int GetX_PlayerTile() {
-  // FVector PlayerLocation =
-  // GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation(); ��
-  // ����� �� GetWorld
-  int32 p = 0;
-  return p;
-}
 void AMapGenerator::ImportTileSets() {
+  //Base terrain types:
   static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetGrass(
       TEXT("PaperTileSet'/Game/texture/grasstileset'"));
   if (TileSetAssetGrass.Succeeded()) {
@@ -40,8 +34,13 @@ void AMapGenerator::ImportTileSets() {
   if (TileSetAssetFog.Succeeded()) {
     FogTileSet = TileSetAssetFog.Object;
   }
+  static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetArmy(
+      TEXT("PaperTileSet'/Game/texture/warriortileset'"));
+  if (TileSetAssetArmy.Succeeded()) {
+    ArmyTileSet = TileSetAssetArmy.Object;
+  }
 
-
+  //Dark terrain types:
     static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetDarkGrass(
       TEXT("PaperTileSet'/Game/texture/Dark/DarkGrassTileSet'"));
   if (TileSetAssetDarkGrass.Succeeded()) {
@@ -119,7 +118,7 @@ void AMapGenerator::UpdateRhombVision(
 }
 
 void AMapGenerator::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
-  X = abs((X) % MapWidth); // safe pass
+  X = abs((X) % MapWidth);
   Y = abs((Y) % MapHeight);
   FPaperTileInfo TileInfo;
   switch (TerrainData[X][Y]) {
@@ -155,6 +154,13 @@ void AMapGenerator::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
           TileInfo.TileSet = DarkWaterTileSet;
       }
     break;
+   case Army_position:
+      if (vision == VisionType::Seen) {
+        TileInfo.TileSet = ArmyTileSet;
+      } else {
+        TileInfo.TileSet = DarkGrassTileSet;
+      }
+    break;
   }
   TileInfo.PackedTileIndex = 0;
   TileMapComponent->SetTile(X, Y, 0, TileInfo);
@@ -172,6 +178,7 @@ void AMapGenerator::BeginPlay() {
   if (TileMapComponent) {
     InitTerrainData();
     GenerateTerrainData();
+    GenerateEnemies();
     TileMapComponent->ResizeMap(MapWidth, MapHeight);
     FVector PlayerLocation =
         GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
@@ -187,21 +194,32 @@ void AMapGenerator::OneColorMap() {
   for (int32 X = 0; X < MapWidth; ++X) {
     for (int32 Y = 0; Y < MapHeight; ++Y) {
       FPaperTileInfo TileInfo;
-
-      int32 Scale1 = X;
-      int32 Scale2 = Y;
       TileInfo.TileSet = FogTileSet;
       TileInfo.PackedTileIndex = 0;
       TileMapComponent->SetTile(X, Y, 0, TileInfo);
     }
   }
 }
-
+void AMapGenerator::GenerateEnemies(){
+  float x=MapWidth*MapHeight/100;//one Army_position for 33^2 tiles
+  int32 enemies_count=x*FMath::RandRange(10, 15)/10;
+  for (int32 enemy_ind=0; enemy_ind<enemies_count; enemy_ind++){
+    while (true){
+      int32 X = FMath::RandRange(0, MapWidth-1);
+      int32 Y = FMath::RandRange(0, MapHeight-1);
+      if (TerrainData[X][Y]==Grass){
+          TerrainData[X][Y]=Army_position;
+          enemies.Add({ X, Y, int32(10), int32(10), int32(10) });//Add<=>push_back
+          break;
+      }
+    }
+  }
+}
 void AMapGenerator::InitTerrainData() { // how Init another way?
   TArray<TerrainType> DefaultStrip;
   DefaultStrip.Init(Grass, MapHeight);
   TerrainData.Init(DefaultStrip, MapWidth);
-  // �� ������� ��� ����� -  �����
+
 }
 
 void AMapGenerator::GenerateTerrainData() {
