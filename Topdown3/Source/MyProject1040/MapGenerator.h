@@ -11,21 +11,8 @@
 #include "PaperTileMapComponent.h"
 #include "PaperTileSet.h"
 #include "Army.h"
+#include "TerrainType.h"
 #include "MapGenerator.generated.h"
-UENUM()
-enum TerrainType {
-  Grass UMETA(DisplayName = "Grass"),
-  Woods UMETA(DisplayName = "Woods"),
-  Mountains UMETA(DisplayName = "Mountains"),
-  Water UMETA(DisplayName = "Water"),
-  Army_position UMETA(DisplayName = "Army position"),
-};
-
-UENUM()
-enum VisionType {
-	Seen UMETA(DisplayName = "Seen"),
-  Unseen UMETA(DisplayName = "Unseen"),
-};
 
 UCLASS()
 class MYPROJECT1040_API AMapGenerator : public AActor {

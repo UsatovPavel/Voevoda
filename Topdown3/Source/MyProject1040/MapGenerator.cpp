@@ -209,7 +209,7 @@ void AMapGenerator::GenerateEnemies(){
       int32 Y = FMath::RandRange(0, MapHeight-1);
       if (TerrainData[X][Y]==Grass){
           TerrainData[X][Y]=Army_position;
-          enemies.Add({ X, Y, int32(10), int32(10), int32(10) });//Add<=>push_back
+          enemies.Add({int32(10), int32(10), int32(10) });//Add<=>push_back
           break;
       }
     }
