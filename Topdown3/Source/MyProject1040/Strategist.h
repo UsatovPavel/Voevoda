@@ -17,6 +17,8 @@ class MYPROJECT1040_API AStrategist : public AActor
 {
 	GENERATED_BODY()
 private:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
+	TSubclassOf<AActor> ActorToSpawn;
 	bool dead;
 public:	
 	int32 id;
@@ -31,6 +33,7 @@ public:
 		return dead;
 	}
 	AStrategist();
+	AStrategist(Location init_loc);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -12,6 +12,7 @@ class MYPROJECT1040_API General
 {
 public:
 	General();
+	General(Location init_loc);
 	Army army_size;
 	Location position;
 	bool is_dead;

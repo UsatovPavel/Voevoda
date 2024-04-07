@@ -10,6 +10,7 @@ enum TerrainType {
     Mountains UMETA(DisplayName = "Mountains"),
     Water UMETA(DisplayName = "Water"),
     Army_position UMETA(DisplayName = "Army position"),
+    Castle UMETA(DisplayName = "Castle"),
     Empty UMETA(DisplayName = "Empty"),
 };
 

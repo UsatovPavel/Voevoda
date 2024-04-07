@@ -15,7 +15,9 @@ public:
 	int32 Width = 500;
 	int32 Height = 300;
 	TArray<TArray<TerrainType>> TerrainData;
-	TArray<Location> GeneralInitPos;
+	TArray<Location> GeneralsInitPos;
+	TArray<Location> CastlesInitPos;
 	void random_generate();
 	void generate_enemies();
+	void generate_castles();
 };

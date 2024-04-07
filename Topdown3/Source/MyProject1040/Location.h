@@ -12,5 +12,6 @@ class MYPROJECT1040_API Location
 public:
 	int32 x;
 	int32 y;
-	Location(int32 x_, int32 y_):x(x_), y(y_) {}
+	Location(): x(0), y(0){ }
+	Location(const int32 x_, const int32 y_):x(x_), y(y_) {}
 };

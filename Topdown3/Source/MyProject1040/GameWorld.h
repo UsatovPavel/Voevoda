@@ -13,6 +13,9 @@
 #include "Army.h"
 #include "TerrainType.h"
 #include "GameMap.h"
+#include "MapPainter.h"
+#include "Strategist.h"
+#include "Structure.h"
 #include "GameWorld.generated.h"
 
 UCLASS()
@@ -26,31 +29,10 @@ public:
 public:
     virtual void BeginPlay() override;
 
-public:
-    void generate_map();
-    void OneColorMap();
-    void UpdateRhombVision(int32 X, int32 Y, int32 Radius, VisionType vision);
-
 private:
     // UPROPERTY(EditAnywhere, Category = "TileMap")
-    UPaperTileMapComponent* TileMapComponent;
-
-    UPaperTileSet* GrassTileSet;
-    UPaperTileSet* WaterTileSet;
-    UPaperTileSet* MountainsTileSet;
-    UPaperTileSet* WoodsTileSet;
-    UPaperTileSet* FogTileSet;
-    UPaperTileSet* ArmyTileSet;
-
-    UPaperTileSet* DarkGrassTileSet;
-    UPaperTileSet* DarkWaterTileSet;
-
-    UPaperTileSet* DarkMountainsTileSet;
-    UPaperTileSet* DarkWoodsTileSet;
-    GameMap map;
-    int32 InitPlayerX;
-    int32 InitPlayerY;
-    TArray<Army> enemies;
-    void ImportTileSets();
-    void UpdateTileVision(int32 X, int32 Y, VisionType vision);
+    GameMap* map_ptr;
+    AMapPainter* painter_ptr;
+    TArray<AStrategist*> strategists;
+    TArray<AStructure*> structures;
 };

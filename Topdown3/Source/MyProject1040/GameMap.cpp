@@ -48,9 +48,24 @@ void GameMap::generate_enemies(){
       int32 Y = FMath::RandRange(0, Height-1);
       if (TerrainData[X][Y]==Grass){
           TerrainData[X][Y]=Army_position;
-          GeneralInitPos.Add({X, Y });//Add<=>push_back
+          GeneralsInitPos.Add({X, Y });//Add<=>push_back
           break;
       }
     }
   }
+}
+void GameMap::generate_castles() {
+    float x = Width * Height / 100;//one Castle for 33^2 tiles
+    int32 enemies_count = x * FMath::RandRange(10, 15) / 10;
+    for (int32 enemy_ind = 0; enemy_ind < enemies_count; enemy_ind++) {
+        while (true) {
+            int32 X = FMath::RandRange(0, Width - 1);
+            int32 Y = FMath::RandRange(0, Height - 1);
+            if (TerrainData[X][Y] == Grass) {
+                TerrainData[X][Y] = Castle;
+                CastlesInitPos.Add({ X, Y });//Add<=>push_back
+                break;
+            }
+        }
+    }
 }
