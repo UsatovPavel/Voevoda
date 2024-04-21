@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "TerrainType.h"
 #include "Location.h"
+
 /**
  * 
  */
@@ -17,7 +18,10 @@ public:
 	TArray<TArray<TerrainType>> TerrainData;
 	TArray<Location> GeneralsInitPos;
 	TArray<Location> CastlesInitPos;
+	TArray<Location> CitiesInitPos;
 	void random_generate();
 	void generate_enemies();
 	void generate_castles();
+	void generate_cities();
+
 };

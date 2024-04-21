@@ -44,6 +44,11 @@ void AMapPainter::ImportTileSets() {
     if (TileSetAssetCastle.Succeeded()) {
         CastleTileSet = TileSetAssetCastle.Object;
     }
+    static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetCity(
+        TEXT("PaperTileSet'/Game/texture/citytileset'"));
+    if (TileSetAssetCastle.Succeeded()) {
+        CityTileSet = TileSetAssetCastle.Object;
+    }
 
 
     //Dark terrain types:

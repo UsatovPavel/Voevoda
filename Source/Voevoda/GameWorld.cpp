@@ -8,9 +8,20 @@ AGameWorld::AGameWorld() {
     PrimaryActorTick.bCanEverTick = true;
 
 }
-
+AGameWorld::~AGameWorld() {
+    delete SupplyArmyInteractor;
+}
 void AGameWorld::Tick(float DeltaTime) {
+
     Super::Tick(DeltaTime);
+
+    for (AStructure* structure : structures) {
+        for (AStrategist* strategist : strategists) {
+            if (strategist->general.position == structure->position) {
+                FSupplyArmyInteractor::StartSupplyArmyEvent(strategist, structure);
+            }
+        }
+    }
 }
 
 void AGameWorld::BeginPlay() {
@@ -32,8 +43,13 @@ void AGameWorld::BeginPlay() {
             AStructure new_castle(castle_pos);
             structures.Add(&new_castle);
         }
+        for (int32 id = 1; id <= map_ptr->CitiesInitPos.Num(); id++) {
+            City new_city(map_ptr->CitiesInitPos[id-1], strategists[id-1]);
+            structures.Add(&new_city);
+        }
     }
     else {
         UE_LOG(LogTemp, Warning, TEXT("painter_ptr is nullptr."));
     }
+
 }

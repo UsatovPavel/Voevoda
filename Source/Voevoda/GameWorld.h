@@ -11,6 +11,9 @@
 #include "PaperTileMapComponent.h"
 #include "PaperTileSet.h"
 #include "Army.h"
+#include "City.h"
+#include "SupplyArmyInteractor.h"
+#include "SupplyArmyInteractor.cpp"
 #include "TerrainType.h"
 #include "GameMap.h"
 #include "MapPainter.h"
@@ -24,6 +27,7 @@ class VOEVODA_API AGameWorld : public AActor {
 
 public:
     AGameWorld();
+    ~AGameWorld();
     virtual void Tick(float DeltaTime) override;
 
 public:

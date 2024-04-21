@@ -42,6 +42,7 @@ private:
     UPaperTileSet* FogTileSet;
     UPaperTileSet* ArmyTileSet;
     UPaperTileSet* CastleTileSet;
+    UPaperTileSet* CityTileSet;
 
     UPaperTileSet* DarkCastleTileSet;
     UPaperTileSet* DarkGrassTileSet;
