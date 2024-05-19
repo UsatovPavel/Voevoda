@@ -19,7 +19,6 @@ ARTSCameraPawn::ARTSCameraPawn()
 void ARTSCameraPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	if (const auto PlayerController = Cast<APlayerController>(Controller)) {
 		PlayerController->SetShowMouseCursor(true);
 	}
@@ -72,8 +71,30 @@ void ARTSCameraPawn::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void ARTSCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
+void ARTSCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	PlayerInputComponent->BindAxis("MoveForward", this,
+		&ARTSCameraPawn::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this,
+		&ARTSCameraPawn::MoveRight);
 }
 
+void ARTSCameraPawn::MoveForward(float InputValue) {
+	auto ForwardVector = FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0);
+	ForwardVector.Normalize();
+
+	const auto Forward = ForwardVector * InputValue * 20;
+
+	const auto NextLocation = GetActorLocation() + Forward;
+	SetActorLocation(NextLocation);
+}
+
+void ARTSCameraPawn::MoveRight(float InputValue) {
+	auto ForwardVector = FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0);
+	ForwardVector.Normalize();
+
+	const auto Sideways = GetActorRightVector() * InputValue * 20;
+
+	const auto NextLocation = GetActorLocation() + Sideways;
+	SetActorLocation(NextLocation);
+}

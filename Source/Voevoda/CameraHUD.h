@@ -5,11 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "MyPlayerCharacter.h"
-#include "MapGenerator.h"
 #include "CameraHUD.generated.h"
 
 UCLASS()
-class MYPROJECT1040_API ACameraHUD : public AHUD
+class VOEVODA_API ACameraHUD : public AHUD
 {
 	GENERATED_BODY()
 	

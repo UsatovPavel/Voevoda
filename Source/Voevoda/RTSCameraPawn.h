@@ -7,7 +7,7 @@
 #include "RTSCameraPawn.generated.h"
 
 UCLASS()
-class MYPROJECT1040_API ARTSCameraPawn : public APawn
+class VOEVODA_API ARTSCameraPawn : public APawn
 {
 	GENERATED_BODY()
 
@@ -24,4 +24,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 		FVector2D MoveSpeed;
 	FVector2D CurrentInputMoveSpeed;
+
+	// Set WASD movement
+    void MoveForward(float InputValue);
+    void MoveRight(float InputValue);
 };

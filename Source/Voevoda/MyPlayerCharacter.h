@@ -6,36 +6,51 @@
 #include "GameFramework/Character.h"
 #include "MyPlayerCharacter.generated.h"
 
-UCLASS()
-class VOEVODA_API AMyPlayerCharacter : public ACharacter {
+UCLASS(Blueprintable)
+class AMyPlayerCharacter : public ACharacter {
   GENERATED_BODY()
 
 public:
   // Sets default values for this character's properties
   AMyPlayerCharacter();
 
-protected:
-  // Called when the game starts or when spawned
-  virtual void BeginPlay() override;
+  // Returns TopDownCameraComponent subobject
+  FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComp; }
+  // Returns CameraBoom subobject
+  FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return SpringArmComp; }
+  // Returns CursorToWorld subobject
+  FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
-public:
-  // Called every frame
+  UFUNCTION()
+  void SetSelected();
+  UFUNCTION()
+  void SetDeselected();
+  
   virtual void Tick(float DeltaTime) override;
 
   // Called to bind functionality to input
-  virtual void SetupPlayerInputComponent(
-      class UInputComponent *PlayerInputComponent) override;
+  //virtual void SetupPlayerInputComponent(
+  //	class UInputComponent *PlayerInputComponent) override;
+
+  // Player position
+  // UPROPERTY(EditAnywhere)
+  // FVector position = FVector(0, 0, 0);
 
 protected:
+
+  // Set camera
   UPROPERTY(EditAnywhere)
-  class UCameraComponent *Camera;
+  class UCameraComponent *CameraComp;
+  // camera boom
   UPROPERTY(EditAnywhere)
   class USpringArmComponent *SpringArmComp;
+  // A decal that projects to the cursor location
+  UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+  class UDecalComponent* CursorToWorld;
 
-  void MoveForward(float InputValue);
-  void MoveRight(float InputValue);
+  // Set movement
+  // void MoveForward(float InputValue);
+  // void MoveRight(float InputValue);
 
-public:
-  UPROPERTY(EditAnywhere)
-  FVector position = FVector(0, 0, 0);
+
 };

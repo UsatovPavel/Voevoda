@@ -40,50 +40,6 @@ void AMyPlayerController::BeginPlay()
 {   
 	HUDPtr = Cast<ACameraHUD>(GetHUD());
 }
-/*
-void AMyPlayerController::MoveToMouseCursor()
-{
-	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
-	{
-		if (AMyPlayerCharacter* MyPawn = Cast<AMyPlayerCharacter>(GetPawn()))
-		{
-			if (MyPawn->GetCursorToWorld())
-			{
-				//SetNewMoveDestination(MyPawn->GetCursorToWorld()->GetComponentLocation());
-				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MyPawn->GetCursorToWorld()->GetComponentLocation());
-			}
-		}
-	}
-	else
-	{
-		// Trace to see what is under the mouse cursor
-		FHitResult Hit;
-		GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-
-		if (Hit.bBlockingHit)
-		{
-			// We hit something, move there
-			SetNewMoveDestination(Hit.ImpactPoint);
-		}
-	}
-}*/
-/*
-void AMyPlayerController::SetNewMoveDestination(const FVector DestLocation)
-{
-	APawn* const MyPawn = GetPawn();
-	//MyPawn->SetActorLocation(DestLocation);
-	
-	if (MyPawn)
-	{
-		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
-		
-		// We need to issue move command only if far enough in order for walk animation to play correctly
-		if ((Distance > 120.0f))
-		{
-			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
-		}
-	}
-}*/
 
 void AMyPlayerController::SelectionPressed()
 {
@@ -92,9 +48,6 @@ void AMyPlayerController::SelectionPressed()
 		HUDPtr->InitialPoint = HUDPtr->GetMousePosition2D();
 		HUDPtr->bStartSelecting = true;
 	}
-	
-	// set flag to keep updating destination until released
-	//bMoveToMouseCursor = true;
 }
 
 void AMyPlayerController::SelectionReleased()
@@ -104,13 +57,11 @@ void AMyPlayerController::SelectionReleased()
 		HUDPtr->bStartSelecting = false;
 		SelectedActors = HUDPtr->FoundActors;
 	}
-	
-	// clear flag to indicate we should stop updating the destination
-	//bMoveToMouseCursor = false;
 }
 
 void AMyPlayerController::MoveReleased()
 {
+	// move all selected actors
 	for (int32 I = 0; I < SelectedActors.Num(); I++)
 	{
 		FHitResult Hit;
