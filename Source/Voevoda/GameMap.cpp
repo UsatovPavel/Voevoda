@@ -2,6 +2,7 @@
 
 
 #include "GameMap.h"
+
 GameMap::GameMap() {
 	Height = FMath::RandRange(100, 500);
 	Width = FMath::RandRange(100, 500);
@@ -15,6 +16,7 @@ void GameMap::random_generate()
         for (int32 Y = 0; Y < Height; ++Y) {
             int32 Scale1 = X;
             int32 Scale2 = Y;
+
             float NoiseValue =
                 FMath::PerlinNoise2D(FVector2D(Scale1 / 15.0f, Scale2 / 15.0f));
             NoiseValue = (NoiseValue + 1.0f) / 2.0f;

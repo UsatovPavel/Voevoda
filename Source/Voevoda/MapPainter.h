@@ -12,8 +12,10 @@
 #include "PaperTileSet.h"
 #include "Location.h"
 #include "TerrainType.h"
+#include "CubeTileSetClass.h"
 #include "GameMap.h"
 #include "MapPainter.generated.h"
+
 
 UCLASS()
 class VOEVODA_API AMapPainter : public AActor {
@@ -50,6 +52,12 @@ private:
     UPaperTileSet* DarkWoodsTileSet;
     int32 InitPlayerX;
     int32 InitPlayerY;
+
+    UPROPERTY(EditAnywhere, Category = "Grid|Setup")
+    TSubclassOf<ACubeTileSetClass> CubeTile;
+
+    TArray<TArray<ACubeTileSetClass*>> Grid2DArray;
     void ImportTileSets();
     void UpdateTileVision(int32 X, int32 Y, VisionType vision);
+
 };
