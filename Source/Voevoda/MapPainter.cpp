@@ -187,6 +187,27 @@ void AMapPainter::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
 void AMapPainter::BeginPlay() {
     Super::BeginPlay();
 
+    Grid2DArray.SetNumZeroed(map.Width);
+    for (int32 X = 0; X < map.Width; ++X) {
+        Grid2DArray[X].SetNumZeroed(map.Height);
+    }
+
+    for (int32 X = 0; X < map.Width; ++X) {
+        for (int32 Y = 0; Y < map.Height; ++Y) {
+            const float xPos = X * 64;
+            const float yPos = Y * 64;
+            //spawn tiles
+            TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
+            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn);
+            if (NewTile) {
+                NewTile->SetActorLocation(FVector(FIntPoint(xPos, yPos)));
+                NewTile->SetActorRotation(FRotator::ZeroRotator);
+            }
+            
+            Grid2DArray[X][Y] = NewTile;
+        }
+    }
+
     for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
         ++ActorItr) {
 
@@ -196,6 +217,7 @@ void AMapPainter::BeginPlay() {
     if (TileMapComponent) {
         generate_map();
         TileMapComponent->ResizeMap(map.Width, map.Height);
+
         FVector PlayerLocation =
             GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
         InitPlayerX = static_cast<int>(PlayerLocation.X);
@@ -214,6 +236,7 @@ void AMapPainter::OneColorMap() {
             TileInfo.TileSet = FogTileSet;
             TileInfo.PackedTileIndex = 0;
             TileMapComponent->SetTile(X, Y, 0, TileInfo);
+
         }
     }
 }
