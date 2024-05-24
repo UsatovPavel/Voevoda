@@ -41,8 +41,9 @@ void GameMap::random_generate()
 	}
 }
 void GameMap::generate_enemies() {
-	float x = Width * Height / 100;//one Army_position for 33^2 tiles
-	int32 enemies_count = x * FMath::RandRange(10, 15) / 10;
+	//float x = Width * Height / 100;//one Army_position for 33^2 tiles
+	//int32 enemies_count = x * FMath::RandRange(10, 15) / 10;
+	int32 enemies_count = FMath::RandRange(2, 5);
 	for (int32 enemy_ind = 0; enemy_ind < enemies_count; enemy_ind++) {
 		while (true) {
 			int32 X = FMath::RandRange(0, Width - 1);
@@ -54,27 +55,12 @@ void GameMap::generate_enemies() {
 			}
 		}
 	}
-}
-void GameMap::generate_castles() {
-	float x = Width * Height / 100;//one Castle for 33^2 tiles
-	int32 enemies_count = x * FMath::RandRange(10, 15) / 10;
-	for (int32 enemy_ind = 0; enemy_ind < enemies_count; enemy_ind++) {
+
+	int32 cities_count = FMath::RandRange(enemies_count+1, 7);
+	for (int32 city_ind = 0; city_ind < cities_count; city_ind++) {
 		while (true) {
 			int32 X = FMath::RandRange(0, Width - 1);
 			int32 Y = FMath::RandRange(0, Height - 1);
-			if (TerrainData[X][Y] == Grass) {
-				TerrainData[X][Y] = Castle;
-				CastlesInitPos.Add({ X, Y });//Add<=>push_back
-				break;
-			}
-		}
-	}
-}
-void GameMap::generate_cities() {
-	for (Location enemy : GeneralsInitPos) {
-		while (true) {
-			int32 X = FMath::RandRange(enemy.x-5, enemy.x + 5);
-			int32 Y = FMath::RandRange(enemy.y-5, enemy.y + 5);
 			if (TerrainData[X][Y] == Grass) {
 				TerrainData[X][Y] = Castle;
 				CitiesInitPos.Add({ X, Y });//Add<=>push_back
@@ -82,4 +68,35 @@ void GameMap::generate_cities() {
 			}
 		}
 	}
+
 }
+//void GameMap::generate_castles() {
+//	float x = Width * Height / 100;//one Castle for 33^2 tiles
+//	int32 enemies_count = x * FMath::RandRange(10, 15) / 10;
+//	for (int32 enemy_ind = 0; enemy_ind < enemies_count; enemy_ind++) {
+//		while (true) {
+//			int32 X = FMath::RandRange(0, Width - 1);
+//			int32 Y = FMath::RandRange(0, Height - 1);
+//			if (TerrainData[X][Y] == Grass) {
+//				TerrainData[X][Y] = Castle;
+//				CastlesInitPos.Add({ X, Y });//Add<=>push_back
+//				break;
+//			}
+//		}
+//	}
+//}
+//void GameMap::generate_cities() {
+//	for (Location enemy : GeneralsInitPos) {
+//		while (true) {
+//			/*int32 X = FMath::RandRange(enemy.x-25, enemy.x + 25);
+//			int32 Y = FMath::RandRange(enemy.y-25, enemy.y + 25);*/
+//			int32 X = FMath::RandRange(0, Width - 1);
+//			int32 Y = FMath::RandRange(0, Height - 1);
+//			if (TerrainData[X][Y] == Grass) {
+//				TerrainData[X][Y] = Castle;
+//				CitiesInitPos.Add({ X, Y });//Add<=>push_back
+//				break;
+//			}
+//		}
+//	}
+//}

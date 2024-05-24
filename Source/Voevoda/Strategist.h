@@ -19,9 +19,10 @@ class VOEVODA_API AStrategist : public AActor
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	TSubclassOf<AActor> ActorToSpawn;
-	bool dead;
+	bool dead = false;
+	//static int32 NextStrategistID;
 public:	
-	int32 id;
+	int32 id ;
 	FString username;
 	TArray<int32> structures_controlled;
 	int32 manpower_available;
@@ -32,6 +33,7 @@ public:
 	bool is_dead() {
 		return dead;
 	}
+	void addStructure(int32 id);
 	AStrategist();
 	AStrategist(Location init_loc);
 protected:

@@ -29,7 +29,7 @@ public:
         case 1:
             unitType = Infantry;
             break;
-        case 3:
+        case 2:
             unitType = Cavalry;
             break;
         }
@@ -39,8 +39,13 @@ public:
 	~City();
 
 	void replenish_army(AStrategist* player_id);
+    void renewCityResourses();
+
+    void SetOwnerPosition (AStrategist* player_id, Location pos, int32 id_);
+    AStrategist* GetOwner();
 
 private:
+    //void PostInitializeComponents();
 	UnitType unitType;
     AStrategist* owner;
 };

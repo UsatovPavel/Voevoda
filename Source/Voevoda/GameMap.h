@@ -21,7 +21,7 @@ public:
 	TArray<Location> CitiesInitPos;
 	void random_generate();
 	void generate_enemies();
-	void generate_castles();
-	void generate_cities();
+	//void generate_castles();
+	//void generate_cities();
 
 };

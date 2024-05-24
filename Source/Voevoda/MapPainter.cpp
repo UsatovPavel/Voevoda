@@ -50,7 +50,6 @@ void AMapPainter::ImportTileSets() {
         CityTileSet = TileSetAssetCastle.Object;
     }
 
-
     //Dark terrain types:
     static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetDarkCastle(
         TEXT("PaperTileSet'/Game/texture/Dark/DarkCastleTileSet'"));
@@ -87,6 +86,7 @@ AMapPainter::AMapPainter() {
     ImportTileSets();
 
 }
+
 
 void AMapPainter::Tick(float DeltaTime) {
     FVector PlayerLocation = GetWorld()
@@ -192,6 +192,29 @@ void AMapPainter::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
 void AMapPainter::BeginPlay() {
     Super::BeginPlay();
 
+   // BeginPlayFunction();
+
+ /*   for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
+        ++ActorItr) {
+
+        TileMapComponent = ActorItr->GetRenderComponent();
+    }
+
+    if (TileMapComponent) {
+        generate_map();
+        TileMapComponent->ResizeMap(map.Width, map.Height);
+        FVector PlayerLocation =
+            GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation();
+        InitPlayerX = static_cast<int>(PlayerLocation.X);
+        InitPlayerY = static_cast<int>(PlayerLocation.Y);
+        OneColorMap();
+    }
+    else {
+        UE_LOG(LogTemp, Warning, TEXT("TileMapComponent is nullptr."));
+    }*/
+}
+
+void AMapPainter::BeginPlayFunction() {
     for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
         ++ActorItr) {
 
@@ -223,7 +246,22 @@ void AMapPainter::OneColorMap() {
     }
 }
 void AMapPainter::generate_map() {
+    FString message = FString::Printf(TEXT("generate_map()"));
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, message);
     map.random_generate();
     map.generate_enemies();
-    map.generate_castles();
+    //map.generate_cities();
+}
+
+int32 AMapPainter::GetMapTileHeight() {
+    return TileMapComponent->TileMap->TileHeight;
+}
+int32 AMapPainter::GetMapTileWidth() {
+    return TileMapComponent->TileMap->TileWidth;
+}
+int32 AMapPainter::GetInitPlayerY() {
+    return InitPlayerY;
+}
+int32 AMapPainter::GetInitPlayerX() {
+    return InitPlayerX;
 }

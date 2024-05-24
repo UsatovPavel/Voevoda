@@ -13,7 +13,6 @@
 #include "Army.h"
 #include "City.h"
 #include "SupplyArmyInteractor.h"
-#include "SupplyArmyInteractor.cpp"
 #include "TerrainType.h"
 #include "GameMap.h"
 #include "MapPainter.h"
@@ -39,4 +38,8 @@ private:
     AMapPainter* painter_ptr;
     TArray<AStrategist*> strategists;
     TArray<AStructure*> structures;
+    SupplyArmyInteractor SupplyArmyInteractorInstance;
+    AMyPlayerCharacter* playerCharacter;
+
+    void InitializePointers();
 };

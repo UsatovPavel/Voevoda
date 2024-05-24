@@ -3,38 +3,45 @@
 #include "Strategist.h"
 #include "Structure.h"
 #include "City.h"
-#include "HAL/Runnable.h"
-#include "HAL/ThreadSafeBool.h"
-#include "HAL/RunnableThread.h"
-#include "Misc/ScopeLock.h"
+#include "MyPlayerCharacter.h"
+#include "UStructureInfoWidget.h"
 
-class VOEVODA_API FSupplyArmyInteractor : public FRunnable
+class AMyPlayerCharacter;
+
+class VOEVODA_API SupplyArmyInteractor 
 {
 private:
-    AStrategist* CurrentStrategist;
-    AStructure* CurrentStructure;
+
+    AMyPlayerCharacter* PlayerCharacter = nullptr;
+    TMap<TPair<int32, int32>, int32> LastSupplyTimeMap;
+    TMap<int32, int32> RenewCityResoursesMap;
+    bool seted = false;
+    void HandleIfTrue2(AStrategist* strategist, AStructure* structure);
+
+    //TMap<TPair<int32, int32>, float> LastSupplyTimeMap;
+    //void HandleIfTrue(AStrategist* strategist, AStructure* structure, float Time);
 
 public:
-    //static FCriticalSection Mutex;
-    //static TMap<TPair<int32, int32>, TPair<FRunnableThread*, FSupplyArmyInteractor*>> ActiveThreads;
 
-    static FCriticalSection& GetMutex() {
-        static FCriticalSection Mutex;
-        return Mutex;
+    ///void SetMapAndPlayerCharacter2(AMyPlayerCharacter* PlayerCharacter_, TArray<AStrategist*>& strategists, TArray<AStructure*>& structures);
+    //void StartSupplyArmyEvent(TArray<AStrategist*>& strategists, TArray<AStructure*>& structures, float Time);
+
+    void StartSupplyArmyEvent2(TArray<AStrategist*>& strategists, TArray<AStructure*>& structures);
+
+    bool is_seted() {
+        return(seted);
     }
 
-    static TMap<TPair<int32, int32>, TPair<FRunnableThread*, FSupplyArmyInteractor*>>& GetActiveThreads() {
-        static TMap<TPair<int32, int32>, TPair<FRunnableThread*, FSupplyArmyInteractor*>> ActiveThreads;
-        return ActiveThreads;
-    }
+   // SupplyArmyInteractor(TArray<AStrategist*> &strategists, TArray<AStructure*> &structures);
 
-    static void StartSupplyArmyEvent(AStrategist* InStrategist, AStructure* InStructure);
+    //void SetHUD(ASupplyArmyHUD* Hud);
+  /*  void SetPlayerCharacter(AMyPlayerCharacter* PlayerCharacter_, TArray<AStructure*>& structures);
+ 
+    void SetMap(TArray<AStrategist*>& strategists, TArray<AStructure*>& structures);*/
 
-    FSupplyArmyInteractor(AStrategist* Strategist, AStructure* Structure);
+    void SetMapAndPlayerCharacter(AMyPlayerCharacter* PlayerCharacter_, TArray<AStrategist*>& strategists, TArray<AStructure*>& structures);
 
-    ~FSupplyArmyInteractor();
+     SupplyArmyInteractor() = default;
+    ~SupplyArmyInteractor() = default;
 
-    virtual uint32 Run() override;
-
-    //void CleanupFinishedThreads();
 };

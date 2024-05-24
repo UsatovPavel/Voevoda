@@ -14,6 +14,7 @@ class VOEVODA_API AStructure : public AActor
 	GENERATED_BODY()
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
 	TSubclassOf<AActor> ActorToSpawn;
+	//static int32 NextStructureID;
 public:	
 	// Sets default values for this actor's properties
 	 AStructure(Location init_pos);
@@ -25,6 +26,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	//virtual void PostInitializeComponents();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

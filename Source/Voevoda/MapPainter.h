@@ -30,6 +30,11 @@ public:
     void generate_map();
     void OneColorMap();
     void UpdateRhombVision(int32 X, int32 Y, int32 Radius, VisionType vision);
+    void BeginPlayFunction();
+    int32 GetMapTileHeight();
+    int32 GetMapTileWidth();
+    int32 GetInitPlayerY();
+    int32 GetInitPlayerX();
     GameMap map;
 private:
     // UPROPERTY(EditAnywhere, Category = "TileMap")

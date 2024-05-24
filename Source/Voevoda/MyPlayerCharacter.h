@@ -3,6 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Strategist.h"
+#include "SupplyArmyHUD.h"
+#include "MapPainter.h"
+#include "SupplyArmyInteractor.h"
 #include "GameFramework/Character.h"
 #include "MyPlayerCharacter.generated.h"
 
@@ -22,6 +26,8 @@ public:
   // Called every frame
   virtual void Tick(float DeltaTime) override;
 
+  void InitializeStrategist();
+
   // Called to bind functionality to input
   virtual void SetupPlayerInputComponent(
       class UInputComponent *PlayerInputComponent) override;
@@ -35,7 +41,17 @@ protected:
   void MoveForward(float InputValue);
   void MoveRight(float InputValue);
 
+  void UpdateMoveX();
+  void UpdateMoveY();
+
 public:
   UPROPERTY(EditAnywhere)
   FVector position = FVector(0, 0, 0);
+
+  AMapPainter* painter_ptr;
+  AStrategist* Strategist;
+
+ /* UPROPERTY(EditAnywhere)
+  ASupplyArmyHUD* SupplyArmyHUD;*/
+
 };

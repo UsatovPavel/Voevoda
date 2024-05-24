@@ -3,14 +3,19 @@
 
 #include "Strategist.h"
 
+//int32 AStrategist::NextStrategistID = 1;
+
 // Sets default values
 AStrategist::AStrategist()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	/*id = NextStrategistID;
+	NextStrategistID++;*/
+	manpower_available = FMath::RandRange(100, 300);
+	general = General();
 }
-AStrategist::AStrategist(Location init_loc):AStrategist() {
+AStrategist::AStrategist(Location init_loc) :AStrategist() {
 	general.position = init_loc;
 }
 
@@ -29,4 +34,9 @@ void AStrategist::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void AStrategist::addStructure(int32 id_) {
+	structures_controlled.Add(id_);
+}
+
 
