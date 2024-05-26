@@ -195,16 +195,14 @@ void AMapPainter::BeginPlay() {
     for (int32 X = 0; X < map.Width; ++X) {
         for (int32 Y = 0; Y < map.Height; ++Y) {
             const float xPos = X * 64;
-            const float yPos = Y * 64;
+            const float yPos = - Y * 64;
+            
             //spawn tiles
             TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
-            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn);
-            if (NewTile) {
-                NewTile->SetActorLocation(FVector(FIntPoint(xPos, yPos)));
-                NewTile->SetActorRotation(FRotator::ZeroRotator);
-            }
+            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, -7.f), FRotator::ZeroRotator);
             
             Grid2DArray[X][Y] = NewTile;
+            
         }
     }
 
