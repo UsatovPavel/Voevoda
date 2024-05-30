@@ -25,10 +25,8 @@ public:
     AMapPainter();
     virtual void Tick(float DeltaTime) override;
 
-public:
     virtual void BeginPlay() override;
 
-public:
     void generate_map();
     void OneColorMap();
     void UpdateRhombVision(int32 X, int32 Y, int32 Radius, VisionType vision);
