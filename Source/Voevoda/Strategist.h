@@ -18,9 +18,11 @@ class VOEVODA_API AStrategist : public AActor
 	GENERATED_BODY()
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = true))
-	TSubclassOf<AActor> ActorToSpawn;
+		TSubclassOf<AActor> ActorToSpawn;
+	//UPROPERTY(VisibleAnywhere)
+	//	class UWidgetComponent* ArmyWidgetComp;
 	bool dead;
-public:	
+public:
 	int32 id;
 	FString username;
 	TArray<int32> structures_controlled;
@@ -38,8 +40,23 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		int32 GetInfantry() {
+		return general.army_size.Infantry;
+	}
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		int32 GetArchers() {
+		return general.army_size.Archers;
+	}
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		int32 GetCavalry() {
+		return general.army_size.Cavalry;
+	}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+		bool User_near = false;
+	//UPROPERTY(VisibleAnywhere)
+	//	class UWidgetComponent* ArmyWidgetComp;
 };

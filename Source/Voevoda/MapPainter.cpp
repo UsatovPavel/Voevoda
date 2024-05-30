@@ -1,4 +1,5 @@
 #include "MapPainter.h"
+#include "GameWorld.h"
 #include "CoreMinimal.h"
 #include "EngineUtils.h"
 #include "GameFramework/Actor.h"
@@ -183,7 +184,6 @@ void AMapPainter::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
     TileInfo.PackedTileIndex = 0;
     TileMapComponent->SetTile(X, Y, 0, TileInfo);
 }
-
 void AMapPainter::BeginPlay() {
     Super::BeginPlay();
 
@@ -191,18 +191,27 @@ void AMapPainter::BeginPlay() {
     for (int32 X = 0; X < map.Width; ++X) {
         Grid2DArray[X].SetNumZeroed(map.Height);
     }
-
+    /*
+    TSubclassOf<ACubeTileSetClass> BotvaSpawn = CubeTile;
+    ACubeTileSetClass* NewBotva = GetWorld()->SpawnActor<ACubeTileSetClass>(BotvaSpawn);
+    if (NewBotva) {
+        NewBotva->SetActorLocation(FVector(100.0f, 100.0f, 100.0f));
+        NewBotva->SetActorRotation(FRotator::ZeroRotator);
+    }*/
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawn CubeTile Width Height %lld %lld"), map.Width, map.Height));
     for (int32 X = 0; X < map.Width; ++X) {
         for (int32 Y = 0; Y < map.Height; ++Y) {
             const float xPos = X * 64;
-            const float yPos = - Y * 64;
-            
+            const float yPos = -Y * 64;
             //spawn tiles
             TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
-            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, -7.f), FRotator::ZeroRotator);
+            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn);
+            if (NewTile) {
+                NewTile->SetActorLocation(FVector(FIntPoint(xPos, yPos), -70.0f));//-69 covers TileMap
+                NewTile->SetActorRotation(FRotator::ZeroRotator);
+            }
             
             Grid2DArray[X][Y] = NewTile;
-            
         }
     }
 
@@ -212,8 +221,15 @@ void AMapPainter::BeginPlay() {
         TileMapComponent = ActorItr->GetRenderComponent();
     }
 
+}
+void AMapPainter::generate_TileMap() {//Call spawn_objects from GameWorld
+    for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
+        ++ActorItr) {
+
+        TileMapComponent = ActorItr->GetRenderComponent();
+    }
     if (TileMapComponent) {
-        generate_map();
+        generate_GameMap();
         TileMapComponent->ResizeMap(map.Width, map.Height);
 
         FVector PlayerLocation =
@@ -221,12 +237,13 @@ void AMapPainter::BeginPlay() {
         InitPlayerX = static_cast<int>(PlayerLocation.X);
         InitPlayerY = static_cast<int>(PlayerLocation.Y);
         OneColorMap();
+        UE_LOG(LogTemp, Display, TEXT("generate_TileMap OK, now GameWorld spawn objects."));
+        GameWorld_ptr->spawn_objects();
     }
     else {
-        UE_LOG(LogTemp, Warning, TEXT("TileMapComponent is nullptr."));
+        UE_LOG(LogTemp, Warning, TEXT("generate_TileMap FAIL, TileMapComponent is nullptr"));
     }
 }
-
 void AMapPainter::OneColorMap() {
     for (int32 X = 0; X < map.Width; ++X) {
         for (int32 Y = 0; Y < map.Height; ++Y) {
@@ -238,7 +255,7 @@ void AMapPainter::OneColorMap() {
         }
     }
 }
-void AMapPainter::generate_map() {
+void AMapPainter::generate_GameMap() {
     map.random_generate();
     map.generate_enemies();
     map.generate_castles();
