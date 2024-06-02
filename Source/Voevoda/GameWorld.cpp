@@ -5,7 +5,9 @@
 #include "Templates/SharedPointer.h"
 #include "BattleResponseModel.h"
 #include "VisibilityController.h"
-//#define BATTLES
+
+#define BATTLES
+
 #define SPAWN
 AGameWorld::AGameWorld() {
 
@@ -15,11 +17,10 @@ AGameWorld::AGameWorld() {
 
 void AGameWorld::Tick(float DeltaTime) {
     Super::Tick(DeltaTime);
-#ifdef BATTLES
-    VisibilityController(strategists[0], player_ptr);
     for (auto strateg_ptr : strategists) {
-        //VisibilityController(strateg_ptr, player_ptr);
+        VisibilityController(strateg_ptr, player_ptr);
     }
+#ifdef BATTLES
     TOptional<Location> battle_location;
     for (int i = 0; i < strategists.Num(); i++) {
         if (((strategists[i]->general.position).Manh_dist(player_ptr->general.position) <= 1) && (player_ptr->general.position != Location(0, 0))) {
@@ -27,15 +28,17 @@ void AGameWorld::Tick(float DeltaTime) {
         }
     }
     if (battle_location.IsSet()) {
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue,
+        /*GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue,
             FString::Printf(TEXT("battle_location x %lld"), battle_location.GetValue().X));
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue,
             FString::Printf(TEXT("battle_location y %lld"), battle_location.GetValue().Y));
+         */
         BattleResponseModel(strategists, battle_location.GetValue(), *map_ptr, player_ptr, this);
     }
+    /*
     if (is_losed) {
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("is_losed %lld"), strategists.Last()->general.army_size.Infantry));
-    }
+    }*/
 #endif
 }
 void AGameWorld::spawn_objects() {
@@ -92,8 +95,11 @@ void AGameWorld::BeginPlay() {
     }
 }
 TOptional<AStrategist*> AGameWorld::spawn_strategist(FVector UE_coordinates) {
+    UE_LOG(LogTemp, Warning, TEXT(" spawn strategist"));
     TSubclassOf<AStrategist> StrategToSpawn = BP_Strategist;
+    
     AStrategist* NewObj = GetWorld()->SpawnActor<AStrategist>(StrategToSpawn);
+    UE_LOG(LogTemp, Warning, TEXT(" spawn strategist"));
     if (NewObj) {
         NewObj->SetActorLocation(UE_coordinates);
         NewObj->SetActorRotation(FRotator::ZeroRotator);

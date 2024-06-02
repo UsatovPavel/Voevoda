@@ -19,7 +19,7 @@
 	Empty UMETA(DisplayName = "Empty"),
  */
 inline ArmyModifier calculate_terrain_modifier(TerrainType x, int32 coef) {
-	ArmyModifier modifier(0, 0, 0);//кава штрафуется, пехота и лучники бафаются
+	ArmyModifier modifier(0, 0, 0);//ГЄГ ГўГ  ГёГІГ°Г ГґГіГҐГІГ±Гї, ГЇГҐГµГ®ГІГ  ГЁ Г«ГіГ·Г­ГЁГЄГЁ ГЎГ ГґГ ГѕГІГ±Гї
 	switch (x) {
 	case Woods:
 		modifier.Infantry += 1;
@@ -47,8 +47,8 @@ inline ArmyModifier summary_terrain_modifiers(Location position, const GameMap& 
 	for (int i = -1; i <= 1; i++) {
 		for (int j = -1; j <= 1; j++) {
 			TerrainType t_type = map.get_terrain({ position.X + i, position.Y + j });
-			int32 coef = 1;//если угловые
-			if (i == 0 || j == 0) { coef = 5; }//если соседние
+			int32 coef = 1;//ГҐГ±Г«ГЁ ГіГЈГ«Г®ГўГ»ГҐ
+			if (i == 0 || j == 0) { coef = 5; }//ГҐГ±Г«ГЁ Г±Г®Г±ГҐГ¤Г­ГЁГҐ
 			terrain_modifyer += calculate_terrain_modifier(t_type, coef);
 		}
 	}
@@ -58,12 +58,12 @@ inline ArmyModifier calculate_proportions_modifier(Army army, Army enemy_army) {
 	ArmyComposition player_composition(army);
 	ArmyComposition enemy_composition(enemy_army);
 	ArmyModifier modifyer(100, 100, 100);
-	if (player_composition.Arch >= 0.7 && enemy_composition.Cav >= 0.3) {//кавалерия истребляет лучников
+	if (player_composition.Arch >= 0.7 && enemy_composition.Cav >= 0.3) {//ГЄГ ГўГ Г«ГҐГ°ГЁГї ГЁГ±ГІГ°ГҐГЎГ«ГїГҐГІ Г«ГіГ·Г­ГЁГЄГ®Гў
 		modifyer.Archers -= static_cast<float>(1 - player_composition.Arch) / 0.3 * 100;
 	}
-	if (player_composition.Cav >= 0.7 && enemy_composition.Inf >= 0.3)//пехота штрафуется кавалерию
+	if (player_composition.Cav >= 0.7 && enemy_composition.Inf >= 0.3)//ГЇГҐГµГ®ГІГ  ГёГІГ°Г ГґГіГҐГІГ±Гї ГЄГ ГўГ Г«ГҐГ°ГЁГѕ
 		modifyer.Cavalry -= static_cast<float>(1 - player_composition.Cav) / 0.3 * 50 * (enemy_composition.Inf) / 0.3;
-	if (player_composition.Inf >= 0.7 && enemy_composition.Arch >= 0.3)//лучники расстреливают пехоту
+	if (player_composition.Inf >= 0.7 && enemy_composition.Arch >= 0.3)//Г«ГіГ·Г­ГЁГЄГЁ Г°Г Г±Г±ГІГ°ГҐГ«ГЁГўГ ГѕГІ ГЇГҐГµГ®ГІГі
 		modifyer.Infantry -= static_cast<float>(1 - player_composition.Inf) / 0.3 * 100;
 	return modifyer;
 }
@@ -71,7 +71,7 @@ inline bool calculate_battle_result(Army& player_army, Army enemy_army, ArmyModi
 	float user_strength = player_army.calculate_strength(player_modifier);
 	float enemy_strength = enemy_army.calculate_strength(enemy_modifier);
 	if (user_strength < enemy_strength) {
-		return false;//проигрыш тут должен выкидываться
+		return false;//ГЇГ°Г®ГЁГЈГ°Г»Гё ГІГіГІ Г¤Г®Г«Г¦ГҐГ­ ГўГ»ГЄГЁГ¤Г»ГўГ ГІГјГ±Гї
 	}
 	player_army.Archers = player_army.Archers * ((user_strength - enemy_strength) / user_strength);
 	player_army.Infantry = player_army.Infantry * ((user_strength - enemy_strength) / user_strength);
@@ -117,8 +117,9 @@ public:
 		ArmyModifier terrain_modifyer = summary_terrain_modifiers(position, map);
 		ArmyModifier proportions_player_modifier = calculate_proportions_modifier(player_army_size, enemy_army_size);
 		ArmyModifier proportions_enemy_modifier = calculate_proportions_modifier(enemy_army_size, player_army_size);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White,
+		/*GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White,
 			FString::Printf(TEXT("battle player %lld"), player_army_size.Infantry + player_army_size.Cavalry + player_army_size.Archers));
+			*/
 		bool result = calculate_battle_result(player_army_size, enemy_army_size, proportions_player_modifier * terrain_modifyer, terrain_modifyer * proportions_enemy_modifier);
 		if (result) {
 			player->general.army_size = player_army_size;
@@ -132,10 +133,10 @@ public:
 		}
 		else {
 			GameWorld->is_losed = true;
-			//проигрыш
+			//ГЇГ°Г®ГЁГЈГ°Г»Гё
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-			FString::Printf(TEXT("GameWorld->is_losed %lld"), GameWorld->is_losed));
+		/*GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+			FString::Printf(TEXT("GameWorld->is_losed %lld"), GameWorld->is_losed));*/
 #endif
 	}
 };

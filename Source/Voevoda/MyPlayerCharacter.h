@@ -38,7 +38,7 @@ public:
   // FVector position = FVector(0, 0, 0);
 
 protected:
-
+	virtual void BeginPlay() override;
   // Set camera
   UPROPERTY(EditAnywhere)
   class UCameraComponent *CameraComp;

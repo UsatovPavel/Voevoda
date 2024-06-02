@@ -6,7 +6,7 @@
 #include "PaperTileMap.h"
 #include "PaperTileMapActor.h"
 #include "PaperTileMapComponent.h"
-
+#define SPAWN_CUBE//MyPlayerCharacter don't move without it
 void AMapPainter::ImportTileSets() {
     //Base terrain types:
     static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetGrass(
@@ -85,18 +85,16 @@ AMapPainter::AMapPainter() {
 }
 
 void AMapPainter::Tick(float DeltaTime) {
-    FVector PlayerLocation = GetWorld()
-        ->GetFirstPlayerController()
-        ->GetPawn()
-        ->GetActorLocation(); // works only from Tick()
+    FVector PlayerLocation = player_ptr
+        ->GetActorLocation(); 
     int32 moveX = (static_cast<int>(PlayerLocation.X) - InitPlayerX);
     int32 moveY = (static_cast<int>(PlayerLocation.Y) - InitPlayerY);
     int32 defaultX = 0; // based on character init coordinates
     int32 defaultY = 0;
     int32 Tile_X = abs(
-        ((defaultX + moveX) / TileMapComponent->TileMap->TileWidth) % map.Width);
+        ((defaultX + moveX) / TileMapComponent->TileMap->TileWidth) % map.Width - 3);
     int32 Tile_Y =
-        abs(((defaultY - moveY) / TileMapComponent->TileMap->TileHeight) %
+        abs(((defaultY - moveY) / TileMapComponent->TileMap->TileHeight + 3) %
             map.Height); // very easy swap Height and Width
     UpdateRhombVision(Tile_X, Tile_Y, 7, VisionType::Unseen);
     UpdateRhombVision(Tile_X, Tile_Y, 5, VisionType::Seen);
@@ -191,13 +189,7 @@ void AMapPainter::BeginPlay() {
     for (int32 X = 0; X < map.Width; ++X) {
         Grid2DArray[X].SetNumZeroed(map.Height);
     }
-    /*
-    TSubclassOf<ACubeTileSetClass> BotvaSpawn = CubeTile;
-    ACubeTileSetClass* NewBotva = GetWorld()->SpawnActor<ACubeTileSetClass>(BotvaSpawn);
-    if (NewBotva) {
-        NewBotva->SetActorLocation(FVector(100.0f, 100.0f, 100.0f));
-        NewBotva->SetActorRotation(FRotator::ZeroRotator);
-    }*/
+#ifdef SPAWN_CUBE
     GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawn CubeTile Width Height %lld %lld"), map.Width, map.Height));
     for (int32 X = 0; X < map.Width; ++X) {
         for (int32 Y = 0; Y < map.Height; ++Y) {
@@ -214,7 +206,7 @@ void AMapPainter::BeginPlay() {
             Grid2DArray[X][Y] = NewTile;
         }
     }
-
+#endif
     for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
         ++ActorItr) {
 
