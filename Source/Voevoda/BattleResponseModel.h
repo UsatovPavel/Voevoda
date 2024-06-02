@@ -117,8 +117,9 @@ public:
 		ArmyModifier terrain_modifyer = summary_terrain_modifiers(position, map);
 		ArmyModifier proportions_player_modifier = calculate_proportions_modifier(player_army_size, enemy_army_size);
 		ArmyModifier proportions_enemy_modifier = calculate_proportions_modifier(enemy_army_size, player_army_size);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White,
+		/*GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White,
 			FString::Printf(TEXT("battle player %lld"), player_army_size.Infantry + player_army_size.Cavalry + player_army_size.Archers));
+			*/
 		bool result = calculate_battle_result(player_army_size, enemy_army_size, proportions_player_modifier * terrain_modifyer, terrain_modifyer * proportions_enemy_modifier);
 		if (result) {
 			player->general.army_size = player_army_size;
@@ -134,8 +135,8 @@ public:
 			GameWorld->is_losed = true;
 			//проигрыш
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
-			FString::Printf(TEXT("GameWorld->is_losed %lld"), GameWorld->is_losed));
+		/*GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red,
+			FString::Printf(TEXT("GameWorld->is_losed %lld"), GameWorld->is_losed));*/
 #endif
 	}
 };

@@ -42,5 +42,7 @@ public:
         TSubclassOf<AActor> BP_Strategist;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Bool")
         bool is_losed = false;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Bool")
+        bool is_victory = false;
     void spawn_objects();
 };

@@ -63,7 +63,8 @@ AMyPlayerCharacter::AMyPlayerCharacter() {
 }
 
 // Called when the game starts or when spawned
-// void AMyPlayerCharacter::BeginPlay() { Super::BeginPlay(); }
+ void AMyPlayerCharacter::BeginPlay() { Super::BeginPlay(); general.army_size = Army();
+ }
 
 void AMyPlayerCharacter::SetSelected()
 {
@@ -78,7 +79,7 @@ void AMyPlayerCharacter::SetDeselected()
 // Called every frame
 void AMyPlayerCharacter::Tick(float DeltaTime) { 
     Super::Tick(DeltaTime); 
-
+	general.update_pos(this->GetActorLocation());
 	if (CursorToWorld != nullptr)
 	{
 		if (APlayerController* PC = Cast<APlayerController>(GetController()))
