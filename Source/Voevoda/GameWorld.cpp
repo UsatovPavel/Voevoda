@@ -5,7 +5,9 @@
 #include "Templates/SharedPointer.h"
 #include "BattleResponseModel.h"
 #include "VisibilityController.h"
+
 #define BATTLES
+
 #define SPAWN
 AGameWorld::AGameWorld() {
 
