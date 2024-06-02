@@ -192,20 +192,6 @@ void AMapPainter::BeginPlay() {
         Grid2DArray[X].SetNumZeroed(map.Height);
     }
 
-    for (int32 X = 0; X < map.Width; ++X) {
-        for (int32 Y = 0; Y < map.Height; ++Y) {
-            const float xPos = X * 64;
-            const float yPos = - Y * 64;
-            
-            //spawn tiles
-            TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
-            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, -7.f), FRotator::ZeroRotator);
-            
-            Grid2DArray[X][Y] = NewTile;
-            
-        }
-    }
-
     for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
         ++ActorItr) {
 
@@ -224,6 +210,25 @@ void AMapPainter::BeginPlay() {
     }
     else {
         UE_LOG(LogTemp, Warning, TEXT("TileMapComponent is nullptr."));
+    }
+
+    for (int32 X = 0; X < map.Width; ++X) {
+        for (int32 Y = 0; Y < map.Height; ++Y) {
+            const float xPos = X * 64;
+            const float yPos = -Y * 64;
+
+            //spawn tiles
+            TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
+            ACubeTileSetClass* NewTile;
+            if (map.TerrainData[X][Y] == Grass) {
+                NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, -7.f), FRotator::ZeroRotator);
+            }
+            else {
+                NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, 50.f), FRotator::ZeroRotator);
+            }
+            Grid2DArray[X][Y] = NewTile;
+
+        }
     }
 }
 
