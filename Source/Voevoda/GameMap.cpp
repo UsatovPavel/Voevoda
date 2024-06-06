@@ -40,6 +40,56 @@ void GameMap::random_generate()
         }
     }
 }
+
+
+void GameMap::random_woods_and_mountains() {
+
+	int32 SeedForMountains_X = FMath::RandRange(0, 300);
+	int32 SeedForMountains_Y = FMath::RandRange(0, 300);
+
+	int32 SeedForWoods_X = FMath::RandRange(0, 300);
+	int32 SeedForWoods_Y = FMath::RandRange(0, 300);
+
+	FString message2 = FString::Printf(TEXT("SeedForWoods_X: %d, SeedForWoods_X: %d"), SeedForWoods_X, SeedForWoods_X);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, message2);
+
+	for (int32 X = 0; X < Width; ++X) {
+		for (int32 Y = 0; Y < Height; ++Y) {
+
+			int32 ScaleForMountains1 = X + SeedForMountains_X;
+			int32 ScaleForMountains2 = Y + SeedForMountains_Y;
+
+			float NoiseValueForMountains =
+				FMath::PerlinNoise2D(FVector2D(ScaleForMountains1 / 15.0f, ScaleForMountains2 / 15.0f));
+			NoiseValueForMountains = (NoiseValueForMountains + 1.0f) / 2.0f;
+
+
+			int32 ScaleForWoods1 = X + SeedForWoods_X;
+			int32 ScaleForWoods2 = Y + SeedForWoods_Y;
+
+			float NoiseValueForWoods =
+				FMath::PerlinNoise2D(FVector2D(ScaleForWoods1 / 15.0f, ScaleForWoods2 / 15.0f));
+			NoiseValueForWoods = (NoiseValueForWoods + 1.0f) / 2.0f;
+
+			if (NoiseValueForMountains < 0.2f) {
+				TerrainData[X][Y] = Mountains;
+			}
+			else if (NoiseValueForWoods > 0.75f) {
+				TerrainData[X][Y] = Woods;
+				//grassTiles.Add(FIntPoint(X, Y));
+			}
+			else  {
+				TerrainData[X][Y] = Grass;
+			}
+		}
+	}
+
+}
+void GameMap::random_river() {
+
+}
+
+
 void GameMap::generate_enemies() {
     float x = Width * Height / 300;//one Army_position for 33^2 tiles
 
