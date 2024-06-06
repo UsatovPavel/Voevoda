@@ -4,8 +4,8 @@
 #include "GameMap.h"
 //#define DEBUG_ONE_AI
 GameMap::GameMap() {
-    Height = FMath::RandRange(50, 80);
-    Width = FMath::RandRange(50, 80);
+    Height = FMath::RandRange(100, 500);
+    Width = FMath::RandRange(100, 500);
     TArray<TerrainType> DefaultStrip;
     DefaultStrip.Init(Grass, Height);
     TerrainData.Init(DefaultStrip, Width);
@@ -87,8 +87,44 @@ void GameMap::random_woods_and_mountains() {
 }
 void GameMap::random_river() {
 
-}
+	for (size_t count = 0; count < Width/20; count++)
+	{
 
+		int32 StartX = FMath::RandRange(30, Width - 30);
+		int32 StartY = FMath::RandRange(30, Height - 30);
+
+		int32 HeadwaterWidth = FMath::RandRange(3, 10);
+
+		for (int32 i = 1; i <= HeadwaterWidth; i++)
+		{
+			for (int32 j = 0; j < i; j++)
+			{
+				TerrainData[StartX - i + 1 + j][StartY + i - 1] = Water;
+			}
+		}
+
+		TArray<int32> DirectionX = {1,1,1, 1, 1, 1 ,1, 0, 1, 1, 1, 0, 1, -1, -1, 0 };
+		TArray<int32> DirectionY = {1,1,0,-1, 1, 1 ,0, 1, 1, 1, 0, 1, -1, 1, 0, -1 };
+
+		while (StartX != 0 && StartY != 0 && StartX != Width - 1 && StartY != Height - 1) {
+
+			int32 Direction = FMath::RandRange(0, DirectionY.Num() - 1);
+
+			StartX += DirectionX[Direction];
+			StartY += DirectionY[Direction];
+
+			if (TerrainData[StartX][StartY] != Water && TerrainData[StartX][StartY] != Grass) {
+				break;
+			}
+
+			TerrainData[StartX][StartY] = Water;
+
+		}
+
+	}
+
+
+}
 
 void GameMap::generate_enemies() {
     float x = Width * Height / 300;//one Army_position for 33^2 tiles
