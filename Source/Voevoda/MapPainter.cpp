@@ -249,7 +249,9 @@ void AMapPainter::OneColorMap() {
     }
 }
 void AMapPainter::generate_GameMap() {
-    map.random_generate();
+    //map.random_generate();
+    map.random_woods_and_mountains();
+    map.random_river();
     map.generate_enemies();
     map.generate_castles();
 }

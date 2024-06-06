@@ -21,4 +21,6 @@ public:
 	void random_generate();
 	void generate_enemies();
 	void generate_castles();
+	void random_woods_and_mountains();
+    void random_river();
 };
