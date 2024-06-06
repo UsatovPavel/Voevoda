@@ -189,24 +189,6 @@ void AMapPainter::BeginPlay() {
     for (int32 X = 0; X < map.Width; ++X) {
         Grid2DArray[X].SetNumZeroed(map.Height);
     }
-#ifdef SPAWN_CUBE
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawn CubeTile Width Height %lld %lld"), map.Width, map.Height));
-    for (int32 X = 0; X < map.Width; ++X) {
-        for (int32 Y = 0; Y < map.Height; ++Y) {
-            const float xPos = X * 64;
-            const float yPos = -Y * 64;
-            //spawn tiles
-            TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
-            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn);
-            if (NewTile) {
-                NewTile->SetActorLocation(FVector(FIntPoint(xPos, yPos), -70.0f));//-69 covers TileMap
-                NewTile->SetActorRotation(FRotator::ZeroRotator);
-            }
-            
-            Grid2DArray[X][Y] = NewTile;
-        }
-    }
-#endif
     for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
         ++ActorItr) {
 
@@ -235,6 +217,25 @@ void AMapPainter::generate_TileMap() {//Call spawn_objects from GameWorld
     else {
         UE_LOG(LogTemp, Warning, TEXT("generate_TileMap FAIL, TileMapComponent is nullptr"));
     }
+
+    for (int32 X = 0; X < map.Width; ++X) {
+      for (int32 Y = 0; Y < map.Height; ++Y) {
+          const float xPos = X * 64;
+          const float yPos = -Y * 64;
+
+          //spawn tiles
+          TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
+          ACubeTileSetClass* NewTile;
+          if (map.TerrainData[X][Y] != Mountains && map.TerrainData[X][Y] != Woods && map.TerrainData[X][Y] != Water) {
+              NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, -7.f), FRotator::ZeroRotator);
+          }
+          else {
+              NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, 50.f), FRotator::ZeroRotator);
+          }
+          Grid2DArray[X][Y] = NewTile;
+
+      }
+  }
 }
 void AMapPainter::OneColorMap() {
     for (int32 X = 0; X < map.Width; ++X) {
