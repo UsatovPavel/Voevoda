@@ -16,6 +16,7 @@
 #include "MapPainter.h"
 #include "Strategist.h"
 #include "Structure.h"
+#include "MyPlayerCharacter.h"
 #include "GameWorld.generated.h"
 
 UCLASS()
@@ -30,9 +31,18 @@ public:
     virtual void BeginPlay() override;
 
 private:
-    // UPROPERTY(EditAnywhere, Category = "TileMap")
     GameMap* map_ptr;
     AMapPainter* painter_ptr;
     TArray<AStrategist*> strategists;
     TArray<AStructure*> structures;
+    AMyPlayerCharacter* player_ptr;
+    TOptional<AStrategist*> spawn_strategist(FVector UE_coordinates);
+public:
+    UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = True), Category = "Setup")
+        TSubclassOf<AActor> BP_Strategist;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Bool")
+        bool is_losed = false;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Bool")
+        bool is_victory = false;
+    void spawn_objects();
 };

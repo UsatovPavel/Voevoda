@@ -14,9 +14,11 @@
 #include "TerrainType.h"
 #include "CubeTileSetClass.h"
 #include "GameMap.h"
+#include "Strategist.h"
+#include "MyPlayerCharacter.h"
 #include "MapPainter.generated.h"
 
-
+class AGameWorld;
 UCLASS()
 class VOEVODA_API AMapPainter : public AActor {
     GENERATED_BODY()
@@ -25,9 +27,12 @@ public:
     AMapPainter();
     virtual void Tick(float DeltaTime) override;
 
+public:
     virtual void BeginPlay() override;
 
-    void generate_map();
+public:
+    void generate_GameMap();
+    void generate_TileMap();
     void OneColorMap();
     void UpdateRhombVision(int32 X, int32 Y, int32 Radius, VisionType vision);
     GameMap map;
@@ -53,9 +58,13 @@ private:
 
     UPROPERTY(EditAnywhere, Category = "Grid|Setup")
     TSubclassOf<ACubeTileSetClass> CubeTile;
+    UPROPERTY(EditAnywhere, Category = "Setup")
+        TSubclassOf<AStrategist> StrategistBP;
 
     TArray<TArray<ACubeTileSetClass*>> Grid2DArray;
     void ImportTileSets();
     void UpdateTileVision(int32 X, int32 Y, VisionType vision);
-
+public:
+    AMyPlayerCharacter* player_ptr;
+    AGameWorld* GameWorld_ptr;
 };
