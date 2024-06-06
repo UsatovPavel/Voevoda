@@ -71,10 +71,10 @@ void GameMap::random_woods_and_mountains() {
 				FMath::PerlinNoise2D(FVector2D(ScaleForWoods1 / 15.0f, ScaleForWoods2 / 15.0f));
 			NoiseValueForWoods = (NoiseValueForWoods + 1.0f) / 2.0f;
 
-			if (NoiseValueForMountains < 0.2f) {
+			if (NoiseValueForMountains < 0.25f) {
 				TerrainData[X][Y] = Mountains;
 			}
-			else if (NoiseValueForWoods > 0.75f) {
+			if (NoiseValueForWoods > 0.75f) {
 				TerrainData[X][Y] = Woods;
 				//grassTiles.Add(FIntPoint(X, Y));
 			}
