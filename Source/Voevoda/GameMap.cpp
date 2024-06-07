@@ -74,7 +74,7 @@ void GameMap::random_woods_and_mountains() {
 			if (NoiseValueForMountains < 0.25f) {
 				TerrainData[X][Y] = Mountains;
 			}
-			if (NoiseValueForWoods > 0.75f) {
+			else if (NoiseValueForWoods > 0.75f) {
 				TerrainData[X][Y] = Woods;
 				//grassTiles.Add(FIntPoint(X, Y));
 			}
