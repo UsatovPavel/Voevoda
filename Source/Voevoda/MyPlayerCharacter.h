@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseStrategist.h"
+#include "UStructureInfoWidget.h"
 #include "GameFramework/Character.h"
 #include "MyPlayerCharacter.generated.h"
 
@@ -36,6 +37,12 @@ public:
   // Player position
   // UPROPERTY(EditAnywhere)
   // FVector position = FVector(0, 0, 0);
+
+  UPROPERTY(EditDefaultsOnly, Category = "UI")
+  TSubclassOf<class UUStructureInfoWidget> HUDWidgetClass;
+
+  UPROPERTY()
+  UUStructureInfoWidget* SupplyArmyWidget = nullptr;
 
 protected:
 	virtual void BeginPlay() override;

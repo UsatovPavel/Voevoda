@@ -21,6 +21,7 @@ public:
 	 Location position; //if const need Constructor()->problems with "Structure.generated.h"
 	 int32 capasity;
 	 int32 manpower_growth;
+	 int32 id;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

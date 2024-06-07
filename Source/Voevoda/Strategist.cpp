@@ -15,6 +15,8 @@ AStrategist::AStrategist()
 }
 AStrategist::AStrategist(Location init_loc) :AStrategist() {
 	general.position = init_loc;
+	manpower_available = FMath::RandRange(100, 300);
+	general = General();
 }
 
 // Called when the game starts or when spawned

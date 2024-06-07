@@ -20,7 +20,7 @@ public:
 	TerrainType get_terrain(Location loc) const;
 	void random_generate();
 	void generate_enemies();
-	void generate_castles();
 	void random_woods_and_mountains();
-    void random_river();
+	void random_river();
+	void generate_castles();
 };

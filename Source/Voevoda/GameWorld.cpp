@@ -12,11 +12,15 @@
 AGameWorld::AGameWorld() {
 
     PrimaryActorTick.bCanEverTick = true;
+    SupplyArmyInteractorInstance = SupplyArmyInteractor();
 
 }
 
 void AGameWorld::Tick(float DeltaTime) {
     Super::Tick(DeltaTime);
+    if (SupplyArmyInteractorInstance.is_seted()) {
+        SupplyArmyInteractorInstance.StartSupplyArmyEvent(strategists, structures);
+    }
     for (auto strateg_ptr : strategists) {
         VisibilityController(strateg_ptr, player_ptr);
     }
@@ -53,6 +57,7 @@ void AGameWorld::spawn_objects() {
             if (Spawned_strateg) {
                 strategists.Add(Cast<AStrategist>(Spawned_strateg.GetValue()));
                 strategists.Last()->general.army_size.rand(strategists.Num());//this seed rand() in army;
+                strategists.Last()->id = strategists.Num();
             }
             //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("i seed generator this number %lld"), strategists.Last()->general.army_size.Infantry));
         }
@@ -60,10 +65,13 @@ void AGameWorld::spawn_objects() {
         //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("infantry deleted strategist %lld"), strategists[0]->general.army_size.Infantry));
         //strategists[0]->Destroy();
 
-        for (auto& castle_pos : map_ptr->CastlesInitPos) {
-            //AStructure new_castle(castle_pos);
-            //structures.Add(&new_castle);
+        for (int32 id = 1; id <= map_ptr->CastlesInitPos.Num(); id++) {
+            City* new_city = NewObject<City>(this);
+            new_city->SetPosition(map_ptr->CastlesInitPos[id - 1], id);
+            structures.Add(new_city);
         }
+        FString message = FString::Printf(TEXT("1111111111111111 Strategists size: %d, Structures size: %d"), strategists.Num(), map_ptr->CastlesInitPos.Num());
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, message);
         UE_LOG(LogTemp, Display, TEXT("GameWorld spawn objects OK"));
 #endif
     }
@@ -92,6 +100,14 @@ void AGameWorld::BeginPlay() {
     }
     else {
        UE_LOG(LogTemp, Warning, TEXT("painter_ptr(MAP) or player_ptr(UserCharacter) is nullptr."));
+    }
+    if (player_ptr) {
+
+        SupplyArmyInteractorInstance.SetMapAndPlayerCharacter(player_ptr, strategists, structures);
+
+    }
+    else {
+        UE_LOG(LogTemp, Warning, TEXT("playerCharacter is nullptr."));
     }
 }
 TOptional<AStrategist*> AGameWorld::spawn_strategist(FVector UE_coordinates) {
