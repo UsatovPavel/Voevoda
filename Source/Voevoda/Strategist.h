@@ -34,6 +34,9 @@ public:
 	bool is_dead() {
 		return dead;
 	}
+	Location get_location() {
+		return general.position;
+	}
 	AStrategist();
 	AStrategist(Location init_loc);
 protected:
@@ -57,6 +60,14 @@ public:
 	}
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
 		bool User_near = false;
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		FVector GetLocation() {
+		return general.position.UE_coordinates();
+	}
+	UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+		void PrintPosition() {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("position in BP %d %d"), general.position.X, general.position.Y));
+	}
 	//UPROPERTY(VisibleAnywhere)
 	//	class UWidgetComponent* ArmyWidgetComp;
 };

@@ -5,10 +5,8 @@
 #include "Templates/SharedPointer.h"
 #include "BattleResponseModel.h"
 #include "VisibilityController.h"
-
-#define BATTLES
-
-#define SPAWN
+#include "DebugMacros.h"
+#include "AI_MoveModel.h"
 AGameWorld::AGameWorld() {
 
     PrimaryActorTick.bCanEverTick = true;
@@ -43,6 +41,17 @@ void AGameWorld::Tick(float DeltaTime) {
     if (is_losed) {
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("is_losed %lld"), strategists.Last()->general.army_size.Infantry));
     }*/
+#endif
+#ifdef MOVE
+    if (GetWorld()->GetRealTimeSeconds() - time_last_move >= STEP_TIME) {
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Move Step %f"), time_last_move));
+        time_last_move = GetWorld()->GetRealTimeSeconds();
+        for (auto strateg_ptr : strategists) {
+            AI_MoveModel(strateg_ptr, structures, player_ptr, map_ptr, this);
+        }
+        is_new_step = true;
+        print_generals_pos();
+    }
 #endif
 }
 void AGameWorld::spawn_objects() {
@@ -122,4 +131,9 @@ TOptional<AStrategist*> AGameWorld::spawn_strategist(FVector UE_coordinates) {
         return TOptional<AStrategist*>();
     }
     return TOptional<AStrategist*>(NewObj);
+}
+void AGameWorld::print_generals_pos() {
+    for (auto strateg_ptr : strategists) {
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("position in GameWorld %d %d"), strateg_ptr->general.position.X, strateg_ptr->general.position.Y));
+    }
 }
