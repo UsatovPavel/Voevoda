@@ -22,14 +22,23 @@ void SupplyArmyInteractor::HandleIfTrue(AStrategist* strategist, AStructure* str
             UE_LOG(LogTemp, Warning, TEXT("city= nullptr"));
             return;
         }
+        
+        int32 replenish_army_for_strategist = ReplenishArmyForStrategistValue[strategist->id];
 
-        city->replenish_army( strategist,100);
+        city->replenish_army( strategist, replenish_army_for_strategist);
 
         LastSupplyTimeMap[Pair] = -1;
         RenewCityResoursesMap[structure->id] = 1;
     }
 
 }
+
+void SupplyArmyInteractor::NewReplenishArmyStrategistValue(AStrategist* strategist, int32 value) {
+
+    ReplenishArmyForStrategistValue[strategist->id] = value;
+
+}
+
 
 void SupplyArmyInteractor::HandleIfTrueForPlayer(AStructure* structure) {
 
@@ -91,6 +100,13 @@ void SupplyArmyInteractor::SetMapAndPlayerCharacter(AMyPlayerCharacter* PlayerCh
         LastSupplyTimeMap.Add(Pair, -1);
 
     }
+
+    for (AStrategist* strategist : strategists) {
+
+        int32 defaultReplenishArmyValue = 10;
+        ReplenishArmyForStrategistValue.Add(strategist->id, defaultReplenishArmyValue);
+    }
+    
     seted = true;
 }
 
