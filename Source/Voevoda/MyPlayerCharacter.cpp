@@ -60,10 +60,20 @@ AMyPlayerCharacter::AMyPlayerCharacter() {
   // Activate ticking in order to update the cursor every frame.
   PrimaryActorTick.bCanEverTick = true;
   PrimaryActorTick.bStartWithTickEnabled = true;
+
+  ConstructorHelpers::FClassFinder<UUStructureInfoWidget> UUStructureInfoWidget(TEXT("/Game/BluePrints/SupplyArmyWidget"));
+  HUDWidgetClass = UUStructureInfoWidget.Class;
+
 }
 
 // Called when the game starts or when spawned
- void AMyPlayerCharacter::BeginPlay() { Super::BeginPlay(); general.army_size = Army();
+ void AMyPlayerCharacter::BeginPlay() { 
+	 Super::BeginPlay(); 
+	 general.army_size = Army();
+	 if (HUDWidgetClass != nullptr)
+	 {
+		 SupplyArmyWidget = CreateWidget<UUStructureInfoWidget>(GetWorld(), HUDWidgetClass);
+	 }
  }
 
 void AMyPlayerCharacter::SetSelected()
