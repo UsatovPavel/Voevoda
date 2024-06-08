@@ -44,87 +44,189 @@ void GameMap::random_generate()
 
 void GameMap::random_woods_and_mountains() {
 
-    int32 SeedForMountains_X = FMath::RandRange(0, 300);
-    int32 SeedForMountains_Y = FMath::RandRange(0, 300);
+	int32 SeedForMountains_X = FMath::RandRange(0, 300);
+	int32 SeedForMountains_Y = FMath::RandRange(0, 300);
 
-    int32 SeedForWoods_X = FMath::RandRange(0, 300);
-    int32 SeedForWoods_Y = FMath::RandRange(0, 300);
+	int32 SeedForWoods_X = FMath::RandRange(0, 300);
+	int32 SeedForWoods_Y = FMath::RandRange(0, 300);
 
-    FString message2 = FString::Printf(TEXT("SeedForWoods_X: %d, SeedForWoods_X: %d"), SeedForWoods_X, SeedForWoods_X);
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, message2);
+	FString message2 = FString::Printf(TEXT("SeedForWoods_X: %d, SeedForWoods_X: %d"), SeedForWoods_X, SeedForWoods_X);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, message2);
 
-    for (int32 X = 0; X < Width; ++X) {
-        for (int32 Y = 0; Y < Height; ++Y) {
+	for (int32 X = 0; X < Width; ++X) {
+		for (int32 Y = 0; Y < Height; ++Y) {
 
-            int32 ScaleForMountains1 = X + SeedForMountains_X;
-            int32 ScaleForMountains2 = Y + SeedForMountains_Y;
+			int32 ScaleForMountains1 = X + SeedForMountains_X;
+			int32 ScaleForMountains2 = Y + SeedForMountains_Y;
 
-            float NoiseValueForMountains =
-                FMath::PerlinNoise2D(FVector2D(ScaleForMountains1 / 15.0f, ScaleForMountains2 / 15.0f));
-            NoiseValueForMountains = (NoiseValueForMountains + 1.0f) / 2.0f;
+			float NoiseValueForMountains =
+				FMath::PerlinNoise2D(FVector2D(ScaleForMountains1 / 15.0f, ScaleForMountains2 / 15.0f));
+			NoiseValueForMountains = (NoiseValueForMountains + 1.0f) / 2.0f;
 
 
-            int32 ScaleForWoods1 = X + SeedForWoods_X;
-            int32 ScaleForWoods2 = Y + SeedForWoods_Y;
+			int32 ScaleForWoods1 = X + SeedForWoods_X;
+			int32 ScaleForWoods2 = Y + SeedForWoods_Y;
 
-            float NoiseValueForWoods =
-                FMath::PerlinNoise2D(FVector2D(ScaleForWoods1 / 15.0f, ScaleForWoods2 / 15.0f));
-            NoiseValueForWoods = (NoiseValueForWoods + 1.0f) / 2.0f;
+			float NoiseValueForWoods =
+				FMath::PerlinNoise2D(FVector2D(ScaleForWoods1 / 15.0f, ScaleForWoods2 / 15.0f));
+			NoiseValueForWoods = (NoiseValueForWoods + 1.0f) / 2.0f;
 
-            if (NoiseValueForMountains < 0.25f) {
-                TerrainData[X][Y] = Mountains;
-            }
-
-            if (NoiseValueForWoods > 0.75f) {
-                TerrainData[X][Y] = Woods;
-                //grassTiles.Add(FIntPoint(X, Y));
-            }
-            else {
-                TerrainData[X][Y] = Grass;
-            }
-        }
-    }
+			if (NoiseValueForMountains < 0.25f) {
+				TerrainData[X][Y] = Mountains;
+			}
+			else if (NoiseValueForWoods > 0.75f) {
+				TerrainData[X][Y] = Woods;
+				//grassTiles.Add(FIntPoint(X, Y));
+			}
+			else  {
+				TerrainData[X][Y] = Grass;
+			}
+		}
+	}
 
 }
 
 
+bool GameMap::IsValid(int32 XValue, int32 YValue) {
+	return (XValue >= 0 && XValue <= Width - 1 && YValue >= 0 && YValue <= Height - 1
+		&& TerrainData[XValue ][YValue ] == Grass);
+}
+
+void GameMap::dfs_for_random_river(int32 XValue, int32 YValue, TArray<TArray<int32>> &VisitedArray) {
+
+	VisitedArray[XValue][YValue] = 1;
+
+	TArray<int32> DirectionX = { 1, -1, 0, 0 };
+	TArray<int32> DirectionY = { 0,  0, 1, -1};
+
+
+	for (int32 i = 0; i < DirectionX.Num(); i++)
+	{
+		if (IsValid(XValue + DirectionX[i], YValue + DirectionY[i]) &&
+			!VisitedArray[XValue + DirectionX[i]][YValue + DirectionY[i]]) {
+			dfs_for_random_river(XValue+ DirectionX[i], YValue+ DirectionY[i], VisitedArray);
+		}
+	}
+}
+
 void GameMap::random_river() {
 
-    for (size_t count = 0; count < Width / 20; count++)
-    {
+	for (size_t count = 0; count < Width / 15; count++)
+	{
 
-        int32 StartX = FMath::RandRange(10, Width - 10);
-        int32 StartY = FMath::RandRange(10, Height - 10);
+		int32 StartX = FMath::RandRange(10, Width - 10);
+		int32 StartY = FMath::RandRange(10, Height - 10);
 
-        int32 HeadwaterWidth = FMath::RandRange(3, 7);
+		int32 HeadwaterWidth = FMath::RandRange(3, 5);
 
-        for (int32 i = 1; i <= HeadwaterWidth; i++)
-        {
-            for (int32 j = 0; j < i; j++)
-            {
-                TerrainData[StartX - i + 1 + j][StartY + i - 1] = Water;
-            }
-        }
+		bool waterNear = 0;
 
-        TArray<int32> DirectionX = { 1,1,1, 1, 1, 1 ,1, 0, 1, 1, 1, 0, 1, -1, -1, 0 };
-        TArray<int32> DirectionY = { 1,1,0,-1, 1, 1 ,0, 1, 1, 1, 0, 1, -1, 1, 0, -1 };
+		for (int32 i = 1; i <= HeadwaterWidth; i++)
+		{
+			for (int32 j = 0; j < i; j++)
+			{
+				if (TerrainData[StartX - i + 1 + j][StartY + i - 1] == Water) {
+					waterNear = 1;
+				}
+			}
+		}
 
-        while (StartX != 0 && StartY != 0 && StartX != Width - 1 && StartY != Height - 1) {
+		if (waterNear) {
+			continue;
+		}
 
-            int32 Direction = FMath::RandRange(0, DirectionY.Num() - 1);
+		TArray <FIntPoint> riverSells;
 
-            StartX += DirectionX[Direction];
-            StartY += DirectionY[Direction];
+		for (int32 i = 1; i <= HeadwaterWidth; i++)
+		{
+			for (int32 j = 0; j < i; j++)
+			{
+				TerrainData[StartX - i + 1 + j][StartY + i - 1] = Water;
+				riverSells.Add({ StartX - i + 1 + j , StartY + i - 1 });
+			}
+		}
 
-            if (TerrainData[StartX][StartY] != Water && TerrainData[StartX][StartY] != Grass) {
-                break;
-            }
+		TArray<int32> DirectionX = { 1, 1, 1, 1, 1, 1 , 1, 0, 1, 1, 1, 0, 1, 1, 1, 0 };
+		TArray<int32> DirectionY = { 1, 1, 0, 1, 1, 1 , 0, 1, 1, 1, 0, 1, 1, 1, 0, 1 };
 
-            TerrainData[StartX][StartY] = Water;
+		int32 DirectionXSign = FMath::RandRange(0, 1);
+		int32 DirectionYSign = FMath::RandRange(0, 1);
 
-        }
+		DirectionXSign = DirectionXSign ? 1 : -1;
+		DirectionYSign = DirectionYSign ? 1 : -1;
 
-    }
+		while (StartX != 0 && StartY != 0 && StartX != Width - 1 && StartY != Height - 1) {
+
+			int32 Direction = FMath::RandRange(0, DirectionY.Num() - 1);
+
+			StartX += DirectionX[Direction] * DirectionXSign;
+			StartY += DirectionY[Direction] * DirectionYSign;
+			
+			if (TerrainData[StartX][StartY] != Grass  && TerrainData[StartX][StartY] != Water) {
+				break;
+			}
+			TerrainData[StartX][StartY] = Water;
+
+			riverSells.Add({ StartX ,StartY });
+
+		}
+
+		TArray<TArray<int32>> VisitedArray;
+
+		VisitedArray.SetNum(Width);
+
+		for (int32 RowIndex = 0; RowIndex < Width; ++RowIndex)
+		{
+			VisitedArray[RowIndex].SetNumZeroed(Height);
+		}
+
+		dfs_for_random_river(0, 0, VisitedArray);
+
+
+		bool is_correct = 1;
+		for (int32 i = 0; i < Width; i++)
+		{
+			for (int32 j = 0; j < Height; j++)
+			{
+				if (!VisitedArray[i][j] && TerrainData[i][j] == Grass) {
+					is_correct = 0;
+				}
+			}
+		}
+
+		if (!is_correct) {
+			for (int i = 0; i < riverSells.Num(); i++){
+				TerrainData[riverSells[i].X][riverSells[i].Y] = Grass;
+			}
+		}
+
+	}
+
+	TArray<TArray<int32>> VisitedArray;
+
+	VisitedArray.SetNum(Width);
+
+	for (int32 RowIndex = 0; RowIndex < Width; ++RowIndex)
+	{
+		VisitedArray[RowIndex].SetNumZeroed(Height);
+	}
+
+	dfs_for_random_river(0, 0, VisitedArray);
+
+
+	bool is_correct = 1;
+	for (int32 i = 0; i < Width; i++)
+	{
+		for (int32 j = 0; j < Height; j++)
+		{
+			if (!VisitedArray[i][j] && TerrainData[i][j] == Grass) {
+				is_correct = 0;
+			}
+		}
+	}
+
+	FString message = FString::Printf(TEXT("is_correct: %d"), is_correct);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, message);
 
 
 }
