@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseStrategist.h"
+#include "UStructureInfoWidget.h"
 #include "GameFramework/Character.h"
 #include "MyPlayerCharacter.generated.h"
 
 UCLASS(Blueprintable)
-class AMyPlayerCharacter : public ACharacter {
+class AMyPlayerCharacter : public ACharacter, public BaseStrategist {
   GENERATED_BODY()
 
 public:
@@ -36,8 +38,16 @@ public:
   // UPROPERTY(EditAnywhere)
   // FVector position = FVector(0, 0, 0);
 
-protected:
+  UPROPERTY(EditDefaultsOnly, Category = "UI")
+  TSubclassOf<class UUStructureInfoWidget> HUDWidgetClass;
 
+  UPROPERTY()
+  UUStructureInfoWidget* SupplyArmyWidget = nullptr;
+
+  AMapPainter* painter_ptr;
+
+protected:
+	virtual void BeginPlay() override;
   // Set camera
   UPROPERTY(EditAnywhere)
   class UCameraComponent *CameraComp;
@@ -52,5 +62,16 @@ protected:
   // void MoveForward(float InputValue);
   // void MoveRight(float InputValue);
 
-
+  UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+	  int32 GetInfantry() {
+	  return general.army_size.Infantry;
+  }
+  UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+	  int32 GetArchers() {
+	  return general.army_size.Archers;
+  }
+  UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+	  int32 GetCavalry() {
+	  return general.army_size.Cavalry;
+  }
 };

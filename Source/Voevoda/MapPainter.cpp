@@ -1,11 +1,12 @@
 #include "MapPainter.h"
+#include "GameWorld.h"
 #include "CoreMinimal.h"
 #include "EngineUtils.h"
 #include "GameFramework/Actor.h"
 #include "PaperTileMap.h"
 #include "PaperTileMapActor.h"
 #include "PaperTileMapComponent.h"
-
+#define SPAWN_CUBE//MyPlayerCharacter don't move without it
 void AMapPainter::ImportTileSets() {
     //Base terrain types:
     static ConstructorHelpers::FObjectFinder<UPaperTileSet> TileSetAssetGrass(
@@ -84,18 +85,16 @@ AMapPainter::AMapPainter() {
 }
 
 void AMapPainter::Tick(float DeltaTime) {
-    FVector PlayerLocation = GetWorld()
-        ->GetFirstPlayerController()
-        ->GetPawn()
-        ->GetActorLocation(); // works only from Tick()
+    FVector PlayerLocation = player_ptr
+        ->GetActorLocation(); 
     int32 moveX = (static_cast<int>(PlayerLocation.X) - InitPlayerX);
     int32 moveY = (static_cast<int>(PlayerLocation.Y) - InitPlayerY);
     int32 defaultX = 0; // based on character init coordinates
     int32 defaultY = 0;
     int32 Tile_X = abs(
-        ((defaultX + moveX) / TileMapComponent->TileMap->TileWidth) % map.Width);
+        ((defaultX + moveX) / TileMapComponent->TileMap->TileWidth) % map.Width - 3);
     int32 Tile_Y =
-        abs(((defaultY - moveY) / TileMapComponent->TileMap->TileHeight) %
+        abs(((defaultY - moveY) / TileMapComponent->TileMap->TileHeight + 3) %
             map.Height); // very easy swap Height and Width
     UpdateRhombVision(Tile_X, Tile_Y, 7, VisionType::Unseen);
     UpdateRhombVision(Tile_X, Tile_Y, 5, VisionType::Seen);
@@ -183,7 +182,6 @@ void AMapPainter::UpdateTileVision(int32 X, int32 Y, VisionType vision) {
     TileInfo.PackedTileIndex = 0;
     TileMapComponent->SetTile(X, Y, 0, TileInfo);
 }
-
 void AMapPainter::BeginPlay() {
     Super::BeginPlay();
 
@@ -191,15 +189,39 @@ void AMapPainter::BeginPlay() {
     for (int32 X = 0; X < map.Width; ++X) {
         Grid2DArray[X].SetNumZeroed(map.Height);
     }
-
+#ifdef SPAWN_CUBE
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Spawn CubeTile Width Height %lld %lld"), map.Width, map.Height));
+    for (int32 X = 0; X < map.Width; ++X) {
+        for (int32 Y = 0; Y < map.Height; ++Y) {
+            const float xPos = X * 64;
+            const float yPos = -Y * 64;
+            //spawn tiles
+            TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
+            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn);
+            if (NewTile) {
+                NewTile->SetActorLocation(FVector(FIntPoint(xPos, yPos), -70.0f));//-69 covers TileMap
+                NewTile->SetActorRotation(FRotator::ZeroRotator);
+            }
+            
+            Grid2DArray[X][Y] = NewTile;
+        }
+    }
+#endif
     for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
         ++ActorItr) {
 
         TileMapComponent = ActorItr->GetRenderComponent();
     }
 
+}
+void AMapPainter::generate_TileMap() {//Call spawn_objects from GameWorld
+    for (TActorIterator<APaperTileMapActor> ActorItr(GetWorld()); ActorItr;
+        ++ActorItr) {
+
+        TileMapComponent = ActorItr->GetRenderComponent();
+    }
     if (TileMapComponent) {
-        generate_map();
+        generate_GameMap();
         TileMapComponent->ResizeMap(map.Width, map.Height);
 
         FVector PlayerLocation =
@@ -207,31 +229,13 @@ void AMapPainter::BeginPlay() {
         InitPlayerX = static_cast<int>(PlayerLocation.X);
         InitPlayerY = static_cast<int>(PlayerLocation.Y);
         OneColorMap();
+        UE_LOG(LogTemp, Display, TEXT("generate_TileMap OK, now GameWorld spawn objects."));
+        GameWorld_ptr->spawn_objects();
     }
     else {
-        UE_LOG(LogTemp, Warning, TEXT("TileMapComponent is nullptr."));
-    }
-
-    for (int32 X = 0; X < map.Width; ++X) {
-        for (int32 Y = 0; Y < map.Height; ++Y) {
-            const float xPos = X * 64;
-            const float yPos = -Y * 64;
-
-            //spawn tiles
-            TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
-            ACubeTileSetClass* NewTile;
-            if (map.TerrainData[X][Y] == Grass) {
-                NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, -7.f), FRotator::ZeroRotator);
-            }
-            else {
-                NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, 50.f), FRotator::ZeroRotator);
-            }
-            Grid2DArray[X][Y] = NewTile;
-
-        }
+        UE_LOG(LogTemp, Warning, TEXT("generate_TileMap FAIL, TileMapComponent is nullptr"));
     }
 }
-
 void AMapPainter::OneColorMap() {
     for (int32 X = 0; X < map.Width; ++X) {
         for (int32 Y = 0; Y < map.Height; ++Y) {
@@ -243,8 +247,10 @@ void AMapPainter::OneColorMap() {
         }
     }
 }
-void AMapPainter::generate_map() {
-    map.random_generate();
+void AMapPainter::generate_GameMap() {
+    //map.random_generate();
+    map.random_woods_and_mountains();
+    map.random_river();
     map.generate_enemies();
     map.generate_castles();
 }

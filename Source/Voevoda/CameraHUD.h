@@ -27,4 +27,7 @@ public:
 	bool bStartSelecting = false;
 	UPROPERTY()
 	TArray <AMyPlayerCharacter*> FoundActors;
+
+
+
 };

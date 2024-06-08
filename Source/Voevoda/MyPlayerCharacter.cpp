@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Materials/Material.h"
+#include "MapPainter.h"
 #include "Engine/World.h"
 
 // Sets default values
@@ -60,10 +61,32 @@ AMyPlayerCharacter::AMyPlayerCharacter() {
   // Activate ticking in order to update the cursor every frame.
   PrimaryActorTick.bCanEverTick = true;
   PrimaryActorTick.bStartWithTickEnabled = true;
+
+  ConstructorHelpers::FClassFinder<UUStructureInfoWidget> UUStructureInfoWidget(TEXT("/Game/BluePrints/SupplyArmyWidget"));
+  HUDWidgetClass = UUStructureInfoWidget.Class;
+
 }
 
 // Called when the game starts or when spawned
-// void AMyPlayerCharacter::BeginPlay() { Super::BeginPlay(); }
+ void AMyPlayerCharacter::BeginPlay() { 
+	 Super::BeginPlay(); 
+	 general.army_size = Army();
+	 if (HUDWidgetClass != nullptr)
+	 {
+		 SupplyArmyWidget = CreateWidget<UUStructureInfoWidget>(GetWorld(), HUDWidgetClass);
+	 }
+
+	 for (TActorIterator<AMapPainter> ActorItr(GetWorld()); ActorItr;
+		 ++ActorItr) {
+		 painter_ptr = Cast<AMapPainter>(*ActorItr);
+	 }
+
+	 for (int32 i = 0; i < 5; i++) {
+		 Scout new_scout(1);
+		 scouts.Add(new_scout);
+	 }
+
+ }
 
 void AMyPlayerCharacter::SetSelected()
 {
@@ -78,7 +101,7 @@ void AMyPlayerCharacter::SetDeselected()
 // Called every frame
 void AMyPlayerCharacter::Tick(float DeltaTime) { 
     Super::Tick(DeltaTime); 
-
+	general.update_pos(this->GetActorLocation());
 	if (CursorToWorld != nullptr)
 	{
 		if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -91,6 +114,12 @@ void AMyPlayerCharacter::Tick(float DeltaTime) {
 			CursorToWorld->SetWorldRotation(CursorR);
 		}
 	}
+
+	for (int32 i = 0; i < scouts.Num(); i++)
+	{
+		scouts[i].TickFromStrategist(painter_ptr);
+	}
+
 }
 
 // Called to bind functionality to input
