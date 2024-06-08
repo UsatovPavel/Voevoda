@@ -26,6 +26,9 @@ public:
     // Custom function to handle input from the player
     UFUNCTION(BlueprintCallable, Category = "Custom")
     void HandleInputEvent(const FText& EnteredText);
+    
+    void ToViewport();
+    void FromViewport();
 
 
 
@@ -44,4 +47,5 @@ protected:
      class UTextBlock* HintTextForInput;*/
 
     int32 ManpowerGrowthWantToSpend = 0;
+    bool OnViewport = 0;
 };

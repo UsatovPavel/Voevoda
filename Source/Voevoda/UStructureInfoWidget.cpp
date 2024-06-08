@@ -14,7 +14,7 @@ void UUStructureInfoWidget::UpdateWidget(int32 id, int32 manpower_growth, UnitTy
 
     if (ManpowerGrowthText)
     {
-        ManpowerGrowthText->SetText(FText::FromString(FString::Printf(TEXT("Manpower Growth: %d"), manpower_growth)));
+        ManpowerGrowthText->SetText(FText::FromString(FString::Printf(TEXT("Units number: %d"), manpower_growth)));
     }
 
 
@@ -41,7 +41,8 @@ void UUStructureInfoWidget::UpdateWidget(int32 id, int32 manpower_growth, UnitTy
 
 void  UUStructureInfoWidget::PlayerStepOnStructure(int32 id, int32 manpower_growth, UnitType Type) {
     UpdateWidget(id, manpower_growth, Type);
-    AddToViewport();
+    ToViewport();
+    //AddToViewport();
 }
 
 int32 UUStructureInfoWidget::GetManpowerGrowthWantToSpend() {
@@ -49,16 +50,29 @@ int32 UUStructureInfoWidget::GetManpowerGrowthWantToSpend() {
 }
 
 void UUStructureInfoWidget::PlayerMovedFromStructure() {
-    RemoveFromViewport();
+    //RemoveFromViewport();
+    FromViewport();
     ManpowerGrowthWantToSpend = 0;
+}
+
+void UUStructureInfoWidget::ToViewport() {
+    if (!OnViewport) {
+        AddToViewport();
+        OnViewport = true;
+    }
+
+}
+void UUStructureInfoWidget::FromViewport() {
+    if (OnViewport) {
+        RemoveFromViewport();
+        OnViewport = false;
+    }
 }
 
 void UUStructureInfoWidget::AfterCityreplenish(int32 manpower_growth) {
     if (ManpowerGrowthText)
     {
-        FString message = FString::Printf(TEXT("AfterCityreplenish  %d "), manpower_growth);
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, message);
-        ManpowerGrowthText->SetText(FText::FromString(FString::Printf(TEXT("Manpower Growth: %d"), manpower_growth)));
+        ManpowerGrowthText->SetText(FText::FromString(FString::Printf(TEXT("Units number: %d"), manpower_growth)));
     }
     ManpowerGrowthWantToSpend = 0;
 }
@@ -67,12 +81,4 @@ void UUStructureInfoWidget::HandleInputEvent(const FText& EnteredText)
 {
     ManpowerGrowthWantToSpend = FCString::Atoi(*EnteredText.ToString());
 
-    FString message = FString::Printf(TEXT("input  %d "), ManpowerGrowthWantToSpend);
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, message);
-
-    //// Update the displayed value
-    //if (ManpowerGrowthWantToSpendText)
-    //{
-    //    ManpowerGrowthWantToSpendText->SetText(FText::FromString(FString::Printf(TEXT("Want to Spend: %d"), ManpowerGrowthWantToSpend)));
-    //}
 }

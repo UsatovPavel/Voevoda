@@ -22,6 +22,7 @@ protected:
 	//virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
+
 	// End PlayerController interface
 
 	/** Input handlers for SetDestination action. */
@@ -31,6 +32,8 @@ protected:
 	void SelectionReleased();
 	UFUNCTION()
 	void MoveReleased();
+	UFUNCTION()
+	void  ScoutReleased();
 
 	UPROPERTY()
 	TArray <AMyPlayerCharacter*> SelectedActors;
