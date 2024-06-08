@@ -34,6 +34,26 @@ void AMyPlayerController::SetupInputComponent()
 	InputComponent->BindAction("LeftMouseClick", IE_Released, this, &AMyPlayerController::SelectionReleased);
 
 	InputComponent->BindAction("RightMouseClick", IE_Released, this, &AMyPlayerController::MoveReleased);
+	InputComponent->BindAction("MouseWheel", IE_Released, this, &AMyPlayerController::ScoutReleased);
+}
+
+void  AMyPlayerController::ScoutReleased() {
+
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit);
+	FVector MousePosition = Hit.Location;
+	Location MouseLocation(MousePosition);
+
+	for (int32 I = 0; I < SelectedActors.Num(); I++)
+	{
+		for (int32 i = 0; i < 5; i++) {
+			if (SelectedActors[I]->scouts[i].active == 0) {
+				SelectedActors[I]->scouts[i].execute_scout(MouseLocation);
+				break;
+			}
+		}
+	}
+
 }
 
 void AMyPlayerController::BeginPlay()

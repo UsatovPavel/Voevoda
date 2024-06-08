@@ -44,6 +44,8 @@ public:
   UPROPERTY()
   UUStructureInfoWidget* SupplyArmyWidget = nullptr;
 
+  AMapPainter* painter_ptr;
+
 protected:
 	virtual void BeginPlay() override;
   // Set camera

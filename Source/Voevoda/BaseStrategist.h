@@ -20,7 +20,7 @@ public:
 	int32 id;
 	FString username;
 	TArray<int32> structures_controlled;
-	int32 manpower_available;
+	int32 manpower_available = 50;
 	TArray<TArray<TerrainType>> visited_tiles;
 	General general;
 	TArray<Scout> scouts;
