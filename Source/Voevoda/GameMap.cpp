@@ -50,9 +50,6 @@ void GameMap::random_woods_and_mountains() {
 	int32 SeedForWoods_X = FMath::RandRange(0, 300);
 	int32 SeedForWoods_Y = FMath::RandRange(0, 300);
 
-	FString message2 = FString::Printf(TEXT("SeedForWoods_X: %d, SeedForWoods_X: %d"), SeedForWoods_X, SeedForWoods_X);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, message2);
-
 	for (int32 X = 0; X < Width; ++X) {
 		for (int32 Y = 0; Y < Height; ++Y) {
 
@@ -224,9 +221,6 @@ void GameMap::random_river() {
 			}
 		}
 	}
-
-	FString message = FString::Printf(TEXT("is_correct: %d"), is_correct);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, message);
 
 
 }

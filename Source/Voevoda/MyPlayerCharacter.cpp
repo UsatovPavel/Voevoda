@@ -63,7 +63,11 @@ AMyPlayerCharacter::AMyPlayerCharacter() {
   PrimaryActorTick.bStartWithTickEnabled = true;
 
   ConstructorHelpers::FClassFinder<UUStructureInfoWidget> UUStructureInfoWidget(TEXT("/Game/BluePrints/SupplyArmyWidget"));
-  HUDWidgetClass = UUStructureInfoWidget.Class;
+  HUDWidgetClassStructure = UUStructureInfoWidget.Class;
+
+
+  ConstructorHelpers::FClassFinder<UScoutsWidget> UScoutsInfoWidget(TEXT("/Game/BluePrints/ScoutsWidgetBp"));
+  HUDWidgetClassScouts = UScoutsInfoWidget.Class;
 
 }
 
@@ -71,20 +75,30 @@ AMyPlayerCharacter::AMyPlayerCharacter() {
  void AMyPlayerCharacter::BeginPlay() { 
 	 Super::BeginPlay(); 
 	 general.army_size = Army();
-	 if (HUDWidgetClass != nullptr)
+
+	 if (HUDWidgetClassStructure != nullptr)
 	 {
-		 SupplyArmyWidget = CreateWidget<UUStructureInfoWidget>(GetWorld(), HUDWidgetClass);
+		 SupplyArmyWidget = CreateWidget<UUStructureInfoWidget>(GetWorld(), HUDWidgetClassStructure);
 	 }
+
+
+	 if (HUDWidgetClassScouts != nullptr)
+	 {
+		 ScoutsWidget = CreateWidget<UScoutsWidget>(GetWorld(), HUDWidgetClassScouts);
+	 }
+
 
 	 for (TActorIterator<AMapPainter> ActorItr(GetWorld()); ActorItr;
 		 ++ActorItr) {
 		 painter_ptr = Cast<AMapPainter>(*ActorItr);
 	 }
 
-	 for (int32 i = 0; i < 5; i++) {
+	 for (int32 i = 0; i < defaultScoutsNumder; i++) {
 		 Scout new_scout(1);
 		 scouts.Add(new_scout);
 	 }
+
+	 ScoutsWidget->AddToViewport();
 
  }
 
@@ -115,10 +129,19 @@ void AMyPlayerCharacter::Tick(float DeltaTime) {
 		}
 	}
 
+	int32 scoutsAvailable = 0;
 	for (int32 i = 0; i < scouts.Num(); i++)
 	{
 		scouts[i].TickFromStrategist(painter_ptr);
+
+		if (!scouts[i].active) {
+			scoutsAvailable++;
+			ScoutsWidget->UpdateWidgetSend(true);
+		}
 	}
+
+	ScoutsWidget->UpdateWidgetScoutsNumber(scoutsAvailable);
+	scoutsAvailable = 0;
 
 }
 

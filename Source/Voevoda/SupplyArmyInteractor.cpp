@@ -86,10 +86,6 @@ void SupplyArmyInteractor::SetMapAndPlayerCharacter(AMyPlayerCharacter* PlayerCh
     PlayerCharacter = PlayerCharacter_;
     int32  PlayerCharacterId = PlayerCharacter->id;
 
-
-    FString message = FString::Printf(TEXT("Strategists size: %d, Structures size: %d"), strategists.Num(), structures.Num());
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, message);
-
     for (AStructure* structure : structures) {
         for (AStrategist* strategist : strategists) {
             TPair<int32, int32> Pair = TPair<int32, int32>(strategist->id, structure->id);

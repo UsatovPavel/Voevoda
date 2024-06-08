@@ -17,6 +17,7 @@ class VOEVODA_API BaseStrategist
 {
 	bool dead;
 public:
+	const int32 defaultScoutsNumder = 5;
 	int32 id;
 	FString username;
 	TArray<int32> structures_controlled;

@@ -70,8 +70,6 @@ void AGameWorld::spawn_objects() {
             new_city->SetPosition(map_ptr->CastlesInitPos[id - 1], id);
             structures.Add(new_city);
         }
-        FString message = FString::Printf(TEXT("1111111111111111 Strategists size: %d, Structures size: %d"), strategists.Num(), map_ptr->CastlesInitPos.Num());
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, message);
         UE_LOG(LogTemp, Display, TEXT("GameWorld spawn objects OK"));
 #endif
     }
