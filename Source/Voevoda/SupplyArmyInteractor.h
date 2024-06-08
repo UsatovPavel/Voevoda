@@ -15,12 +15,15 @@ private:
     AMyPlayerCharacter* PlayerCharacter = nullptr;
     TMap<TPair<int32, int32>, int32> LastSupplyTimeMap;
     TMap<int32, int32> RenewCityResoursesMap;
+    TMap<int32, int32> ReplenishArmyForStrategistValue;
     bool seted = false;
     void HandleIfTrue(AStrategist* strategist, AStructure* structure);
     void HandleIfTrueForPlayer(AStructure* structure);
 
 public:
+
     void StartSupplyArmyEvent(TArray<AStrategist*>& strategists, TArray<AStructure*>& structures);
+    void NewReplenishArmyStrategistValue(AStrategist* strategist, int32 value);
 
     bool is_seted() {
         return(seted);
