@@ -266,3 +266,18 @@ TerrainType GameMap::get_terrain(Location loc) const {
     }
     return Empty;
 }
+bool GameMap::is_tile_valid(Location loc) const {
+	return (loc.X < Width&& loc.X >= 0 && loc.Y >= 0 && loc.Y < Height);
+}
+TArray<Location> GameMap::get_walkable_adj(Location position) const {//проходимые соседи
+	TArray<Location> walkable_adj;
+	TArray<int32> X_diff = { 1, -1, 0, 0 };
+	TArray<int32> Y_diff = { 0, 0, 1, -1 };
+	for (int32 i = 0; i < 4; i++) {
+		Location temp = { position.X + X_diff[i], position.Y + Y_diff[i] };
+		if (is_tile_valid(temp)) {
+			walkable_adj.Add(temp);
+		}
+	}
+	return walkable_adj;
+}

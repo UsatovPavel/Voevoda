@@ -37,7 +37,7 @@ void AGameWorld::Tick(float DeltaTime) {
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue,
             FString::Printf(TEXT("battle_location y %lld"), battle_location.GetValue().Y));
          */
-        BattleResponseModel(strategists, battle_location.GetValue(), *map_ptr, player_ptr, this);
+        BattleResponseModel(strategists, battle_location.GetValue(), map_ptr, player_ptr, this);
     }
     /*
     if (is_losed) {

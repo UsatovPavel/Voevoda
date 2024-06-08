@@ -29,6 +29,9 @@ public:
 	bool is_dead() {
 		return dead;
 	}
+	Location get_location() {
+		return general.position;
+	}
 	BaseStrategist() {};
 	BaseStrategist(Location init_loc);
 };
