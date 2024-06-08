@@ -20,10 +20,12 @@ public:
 	TerrainType get_terrain(Location loc) const;
 	void random_generate();
 	void generate_enemies();
-        void generate_castles();
+	void generate_castles();
 	void random_woods_and_mountains();
-	void random_river();
+        void random_river();
 private:
 	void dfs_for_random_river(int32 XValue, int32 YValue, TArray<TArray<int32>>& VisitedArray);
 	bool IsValid(int32 XValue, int32 YValue);
+
+
 };
