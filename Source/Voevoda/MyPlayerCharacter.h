@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BaseStrategist.h"
 #include "UStructureInfoWidget.h"
+#include "ScoutsWidget.h"
 #include "GameFramework/Character.h"
 #include "MyPlayerCharacter.generated.h"
 
@@ -39,10 +40,16 @@ public:
   // FVector position = FVector(0, 0, 0);
 
   UPROPERTY(EditDefaultsOnly, Category = "UI")
-  TSubclassOf<class UUStructureInfoWidget> HUDWidgetClass;
+  TSubclassOf<class UUStructureInfoWidget> HUDWidgetClassStructure;
 
   UPROPERTY()
   UUStructureInfoWidget* SupplyArmyWidget = nullptr;
+
+  UPROPERTY(EditDefaultsOnly, Category = "UI")
+  TSubclassOf<class UScoutsWidget> HUDWidgetClassScouts;
+
+  UPROPERTY()
+  UScoutsWidget* ScoutsWidget = nullptr;
 
   AMapPainter* painter_ptr;
 

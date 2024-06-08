@@ -46,12 +46,17 @@ void  AMyPlayerController::ScoutReleased() {
 
 	for (int32 I = 0; I < SelectedActors.Num(); I++)
 	{
-		for (int32 i = 0; i < 5; i++) {
+		bool  ScoutSend = false;
+
+		for (int32 i = 0; i < SelectedActors[I]->scouts.Num(); i++) {
 			if (SelectedActors[I]->scouts[i].active == 0) {
 				SelectedActors[I]->scouts[i].execute_scout(MouseLocation);
+				ScoutSend = true;
 				break;
 			}
 		}
+
+		SelectedActors[I]->ScoutsWidget->UpdateWidgetSend(ScoutSend);
 	}
 
 }
