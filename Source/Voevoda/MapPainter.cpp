@@ -195,14 +195,16 @@ void AMapPainter::BeginPlay() {
         for (int32 Y = 0; Y < map.Height; ++Y) {
             const float xPos = X * 64;
             const float yPos = -Y * 64;
+
             //spawn tiles
             TSubclassOf<ACubeTileSetClass> TileToSpawn = CubeTile;
-            ACubeTileSetClass* NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn);
-            if (NewTile) {
-                NewTile->SetActorLocation(FVector(FIntPoint(xPos, yPos), -70.0f));//-69 covers TileMap
-                NewTile->SetActorRotation(FRotator::ZeroRotator);
+            ACubeTileSetClass* NewTile;
+            if (map.TerrainData[X][Y] != Mountains && map.TerrainData[X][Y] != Woods && map.TerrainData[X][Y] != Water) {
+                NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, -50.f), FRotator::ZeroRotator);
             }
-            
+            else {
+                NewTile = GetWorld()->SpawnActor<ACubeTileSetClass>(TileToSpawn, FVector(xPos, yPos, 20.f), FRotator::ZeroRotator);
+            }
             Grid2DArray[X][Y] = NewTile;
         }
     }

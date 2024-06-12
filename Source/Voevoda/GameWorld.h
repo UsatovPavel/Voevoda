@@ -38,18 +38,35 @@ private:
     GameMap* map_ptr;
     AMapPainter* painter_ptr;
     UPROPERTY()
-    TArray<AStrategist*> strategists;
-    UPROPERTY()
     TArray<AStructure*> structures;
     AMyPlayerCharacter* player_ptr;
     SupplyArmyInteractor SupplyArmyInteractorInstance;
     TOptional<AStrategist*> spawn_strategist(FVector UE_coordinates);
 public:
+    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Data")
+        TArray<AStrategist*> strategists;
+    UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+        void print_generals_pos();
     UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = True), Category = "Setup")
         TSubclassOf<AActor> BP_Strategist;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Bool")
         bool is_losed = false;
     UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Bool")
         bool is_victory = false;
+    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Bool")
+        bool is_spawn_completed = false;
+    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Bool")
+        bool is_set_ref_completed = false;
+    UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+        void set_ref_processed() {
+        is_set_ref_completed = true;
+    }
+    UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Bool")
+        bool is_new_step = false;
+    UFUNCTION(BlueprintCallable, Category = "UFUNCTION")
+        void new_step_processed() {
+        is_new_step = false;
+    }
     void spawn_objects();
+    float time_last_move = 0;
 };

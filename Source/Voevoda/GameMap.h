@@ -23,6 +23,8 @@ public:
 	void generate_castles();
 	void random_woods_and_mountains();
         void random_river();
+		TArray<Location> get_walkable_adj(Location position) const;
+		bool is_tile_valid(Location position) const;
 private:
 	void dfs_for_random_river(int32 XValue, int32 YValue, TArray<TArray<int32>>& VisitedArray);
 	bool IsValid(int32 XValue, int32 YValue);
