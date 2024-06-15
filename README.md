@@ -13,6 +13,9 @@
 - Скачать **[Unreal engine](https://www.unrealengine.com/en-US)**
 - Скачать версию движка **4.27**
 - Создать проект с именем **Voevoda** и скопировать в него файлы из ветки **main**
+- Компиляция: обновить **Sourse/Voevoda.Build.cs** - библиотеки подгрузятся.
+- Проставить в Blueprint классы для Strategist, PlayerCharacter, GameWorld.
+- Обновить Blueprint-схемы
 - Запустить сервер
   - перейти в **httpServer**
   - запустить **./main** через консоль
